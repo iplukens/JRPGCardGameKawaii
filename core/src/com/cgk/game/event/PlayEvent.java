@@ -9,5 +9,9 @@ public class PlayEvent implements GameEvent {
 	public PlayEvent(Card card){
 		this.playedCard = card;
 	}
+
+	public EventId getEventId() {
+		return EventId.PLAY;
+	}
 	
 }

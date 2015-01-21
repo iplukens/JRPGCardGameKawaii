@@ -9,4 +9,9 @@ public class DiscardEvent implements GameEvent {
 	public DiscardEvent(Card card){
 		this.card = card;
 	}
+
+	public EventId getEventId() {
+		return EventId.DISCARD;
+	}
+	
 }

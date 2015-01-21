@@ -1,29 +1,26 @@
 package game.gameobject.card;
 
-import org.junit.Before;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import game.gameobject.GameObjectTest;
+
 import org.junit.Test;
 
-import static org.mockito.Mockito.*;
-import com.cgk.game.event.EventQueue;
-import com.cgk.game.event.PlayEvent;
+import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.card.FuelTheFire;
 
-public class FuelTheFireTest {
-
-	private EventQueue queue;
-
-	@Before
-	public void setup() {
-		queue = mock(EventQueue.class);
-	}
+public class FuelTheFireTest extends GameObjectTest {
 
 	@Test
 	public void playTest() {
 		Card ftF = new FuelTheFire(queue);
 		ftF.play();
 		try {
-			verify(queue).put((PlayEvent) anyObject());
+			verify(queue, times(2)).put((GameEvent) anyObject());
+			assertTrue(queue.contains(ftF.getEvent(0)));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

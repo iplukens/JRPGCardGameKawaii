@@ -20,7 +20,8 @@ public abstract class GraphicalObject {
 
 	public abstract void draw();
 
-	public abstract void respondToEvent(GameEvent event);
+	public void respondToEvent(GameEvent event) {
+	}
 
 	public void sendEvent(GameEvent event) {
 		try {

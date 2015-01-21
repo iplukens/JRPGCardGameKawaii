@@ -39,4 +39,8 @@ public abstract class Card extends GraphicalObject {
 		}
 	}
 
+	public GameEvent getEvent(int index) {
+		return cardEvents.get(index);
+	}
+
 }
