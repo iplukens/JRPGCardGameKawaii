@@ -6,9 +6,9 @@ import java.util.List;
 import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
-import com.cgk.game.gameobject.GraphicalObject;
+import com.cgk.game.gameobject.GameObject;
 
-public abstract class Card extends GraphicalObject {
+public abstract class Card extends GameObject {
 
 	private int cardImage;
 	private String cardName;

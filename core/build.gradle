@@ -7,6 +7,10 @@ repositories {
  mavenCentral()
 }
 
+configurations.compile {
+	
+}
+
 dependencies {
       compile "org.springframework:spring-core:4.1.+"
       compile "org.springframework:spring-context:4.1.+"

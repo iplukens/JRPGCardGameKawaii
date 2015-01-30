@@ -7,8 +7,8 @@ public class AttackAdditiveEvent extends ValueEvent {
 		super(value);
 	}
 
-	public EventId getEventId() {
-		return EventId.ADD_BUFF;
+	public EventType getType() {
+		return EventType.ADD_BUFF;
 	}
 	
 }

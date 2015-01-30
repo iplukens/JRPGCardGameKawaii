@@ -1,4 +1,19 @@
 android {
+    packagingOptions{
+    	exclude "META-INF/license.txt"
+    	exclude "META-INF/notice.txt"
+    	exclude "META-INF/DEPENDENCIES.txt"
+		exclude "META-INF/LICENSE"
+    	exclude "META-INF/NOTICE"
+    	exclude "META-INF/DEPENDENCIES"
+    	exclude "META-INF/spring.handlers"
+    	exclude "META-INF/spring.schemas"
+    	exclude "META-INF/spring.tooling"
+    }
+    lintOptions {
+          abortOnError false
+      }
+    
     buildToolsVersion "21.1.2"
     compileSdkVersion 21
     sourceSets {
@@ -77,8 +92,8 @@ eclipse {
     }
 
     jdt {
-        sourceCompatibility = 1.6
-        targetCompatibility = 1.6
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
     }
 
     classpath {

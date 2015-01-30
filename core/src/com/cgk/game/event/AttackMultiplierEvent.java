@@ -6,8 +6,8 @@ public class AttackMultiplierEvent extends ValueEvent {
 		super(value);
 	}
 
-	public EventId getEventId() {
-		return EventId.MULT_BUFF;
+	public EventType getType() {
+		return EventType.MULT_BUFF;
 	}
 
 }

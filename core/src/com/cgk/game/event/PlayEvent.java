@@ -10,8 +10,8 @@ public class PlayEvent implements GameEvent {
 		this.playedCard = card;
 	}
 
-	public EventId getEventId() {
-		return EventId.PLAY;
+	public EventType getType() {
+		return EventType.PLAY;
 	}
 	
 }

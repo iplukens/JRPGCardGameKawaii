@@ -4,9 +4,9 @@ import com.cgk.game.event.AttackAdditiveEvent;
 import com.cgk.game.event.AttackMultiplierEvent;
 import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
-import com.cgk.game.gameobject.GraphicalObject;
+import com.cgk.game.gameobject.GameObject;
 
-public abstract class Enemy extends GraphicalObject {
+public abstract class Enemy extends GameObject {
 	int baseAttack = 0;
 	int tempAttackAdditive = 0;
 	int tempAttackMultiplicative = 1;

@@ -7,7 +7,7 @@ import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.card.Card;
 
-public class Hand extends GraphicalObject{
+public class Hand extends GameObject{
 
 	public Hand(EventQueue eventQueue) {
 		super(eventQueue);

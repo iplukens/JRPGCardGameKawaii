@@ -3,7 +3,7 @@ package com.cgk.game.gameobject;
 import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
 
-public class Hero extends GraphicalObject{
+public class Hero extends GameObject{
 
 	public Hero(EventQueue eventQueue) {
 		super(eventQueue);

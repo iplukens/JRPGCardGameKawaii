@@ -8,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
 
-public abstract class GraphicalObject {
+public abstract class GameObject {
 
-	final Logger LOGGER = Logger.getLogger(GraphicalObject.class.toString());
+	final Logger LOGGER = Logger.getLogger(GameObject.class.toString());
 	@Autowired
 	private EventQueue eventQueue;
 
-	public GraphicalObject(EventQueue eventQueue) {
+	public GameObject(EventQueue eventQueue) {
 		this.eventQueue = eventQueue;
+		eventQueue.registerGameObject(this);
 	}
 
 	public abstract void draw();
