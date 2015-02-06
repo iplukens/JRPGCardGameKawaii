@@ -1,0 +1,14 @@
+package com.cgk.game.gameobject.units.eventresponses;
+
+import com.cgk.game.event.AttackMultiplierEvent;
+import com.cgk.game.gameobject.eventresponses.EventResponse;
+import com.cgk.game.gameobject.units.UnitObject;
+
+public class UnitAttackMultiplierEventResponse extends EventResponse<UnitObject, AttackMultiplierEvent> {
+
+	@Override
+	protected void handleEvent(UnitObject gameObject, AttackMultiplierEvent event) {
+		gameObject.setTempAttackMultiplicative(gameObject.getTempAttackMultiplicative() * event.getValue());
+	}
+
+}

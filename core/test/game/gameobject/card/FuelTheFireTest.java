@@ -1,6 +1,5 @@
 package game.gameobject.card;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -20,7 +19,6 @@ public class FuelTheFireTest extends GameObjectTest {
 		ftF.play();
 		try {
 			verify(queue, times(2)).put((GameEvent) anyObject());
-			assertTrue(queue.contains(ftF.getEvent(0)));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

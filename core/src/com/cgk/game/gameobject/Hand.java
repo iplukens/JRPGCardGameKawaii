@@ -3,9 +3,8 @@ package com.cgk.game.gameobject;
 import java.util.List;
 
 import com.cgk.game.event.DiscardEvent;
-import com.cgk.game.event.EventQueue;
-import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.card.Card;
+import com.cgk.game.system.EventQueue;
 
 public class Hand extends GameObject{
 
@@ -26,7 +25,7 @@ public class Hand extends GameObject{
 	}
 
 	@Override
-	public void respondToEvent(GameEvent event) {
+	protected void setUpEventResponses() {
 		// TODO Auto-generated method stub
 		
 	}

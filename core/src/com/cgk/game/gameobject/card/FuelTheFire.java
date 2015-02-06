@@ -1,8 +1,8 @@
 package com.cgk.game.gameobject.card;
 
 import com.cgk.game.event.AttackAdditiveEvent;
-import com.cgk.game.event.EventQueue;
 import com.cgk.game.event.GameEvent;
+import com.cgk.game.system.EventQueue;
 
 public class FuelTheFire extends Card {
 
@@ -18,9 +18,9 @@ public class FuelTheFire extends Card {
 	}
 
 	@Override
-	public void respondToEvent(GameEvent event) {
+	protected void setUpEventResponses() {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

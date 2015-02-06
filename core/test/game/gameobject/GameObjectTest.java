@@ -4,7 +4,7 @@ import static org.mockito.Mockito.spy;
 
 import org.junit.Before;
 
-import com.cgk.game.event.EventQueue;
+import com.cgk.game.system.EventQueue;
 
 public class GameObjectTest {
 	

@@ -1,23 +1,26 @@
-package com.cgk.game.gameobject;
+package com.cgk.game.gameobject.units.enemy;
 
 import com.cgk.game.system.EventQueue;
 
-public class Deck extends GameObject{
+public class Wesley extends Enemy {
 
-	public Deck(EventQueue eventQueue) {
+	public Wesley() {
+		super();
+	}
+
+	public Wesley(EventQueue eventQueue) {
 		super(eventQueue);
 	}
 
 	@Override
 	public void draw() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void setUpEventResponses() {
-		// TODO Auto-generated method stub
-		
+		super.setUpEventResponses();
 	}
 
 }

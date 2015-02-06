@@ -2,7 +2,7 @@ package com.cgk.game.event;
 
 import com.cgk.game.gameobject.card.Card;
 
-public class DiscardEvent implements GameEvent {
+public class DiscardEvent extends CloneableEvent implements GameEvent {
 
 	Card card;
 	

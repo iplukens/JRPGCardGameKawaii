@@ -1,6 +1,6 @@
 package com.cgk.game.event;
 
-public abstract class ValueEvent implements GameEvent {
+public abstract class ValueEvent extends CloneableEvent implements GameEvent {
 
 	int value;
 

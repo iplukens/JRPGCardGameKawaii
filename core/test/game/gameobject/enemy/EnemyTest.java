@@ -6,8 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.cgk.game.event.AttackAdditiveEvent;
-import com.cgk.game.gameobject.enemy.Enemy;
-import com.cgk.game.gameobject.enemy.Wesley;
+import com.cgk.game.gameobject.units.enemy.Enemy;
+import com.cgk.game.gameobject.units.enemy.Wesley;
 
 public class EnemyTest extends GameObjectTest {
 
