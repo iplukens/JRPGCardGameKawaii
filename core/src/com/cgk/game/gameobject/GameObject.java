@@ -19,18 +19,18 @@ public abstract class GameObject {
 	final Logger LOGGER = Logger.getLogger(GameObject.class.toString());
 	@Autowired
 	private EventQueue eventQueue;
-	private Map<EventType, List<EventResponse<?, ?>>> eventHandlers;
+	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
 
 	public GameObject() {
 		eventQueue.registerGameObject(this);
-		eventHandlers = new HashMap<>();
+		eventResponses = new HashMap<>();
 		setUpEventResponses();
 	}
 
 	public GameObject(EventQueue eventQueue) {
 		this.eventQueue = eventQueue;
 		eventQueue.registerGameObject(this);
-		eventHandlers = new HashMap<>();
+		eventResponses = new HashMap<>();
 		setUpEventResponses();
 	}
 
@@ -39,10 +39,11 @@ public abstract class GameObject {
 	public abstract void draw();
 
 	public void respondToEvent(GameEvent event) {
-		List<EventResponse<?, ?>> handlers = eventHandlers.get(event.getType());
-		if (handlers != null) {
-			for (EventResponse<?, ?> handler : handlers) {
-				handler.respond(this, event);
+		List<EventResponse<?, ?>> responses = eventResponses
+				.get(event.getType());
+		if (responses != null) {
+			for (EventResponse<?, ?> response : responses) {
+				response.respond(this, event);
 			}
 		}
 	}
@@ -63,42 +64,42 @@ public abstract class GameObject {
 	 * adds a response for the EventType
 	 * 
 	 * @param type
-	 * @param handler
+	 * @param response
 	 * @return
 	 */
 	protected Map<EventType, List<EventResponse<?, ?>>> addResponse(
-			EventType type, EventResponse<?, ?> handler) {
-		if (!eventHandlers.containsKey(type)) {
-			eventHandlers.put(type, new ArrayList<EventResponse<?, ?>>());
+			EventType type, EventResponse<?, ?> response) {
+		if (!eventResponses.containsKey(type)) {
+			eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
 		}
-		eventHandlers.get(type).add(handler);
-		return eventHandlers;
+		eventResponses.get(type).add(response);
+		return eventResponses;
 	}
 
 	/**
 	 * replaces any existing event responses with the given event response
 	 * 
 	 * @param type
-	 * @param newHandler
+	 * @param newResponse
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceHandlers(
-			EventType type, EventResponse<?, ?> newHandler) {
-		eventHandlers.put(type, new ArrayList<EventResponse<?, ?>>());
-		eventHandlers.get(type).add(newHandler);
-		return eventHandlers;
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+			EventType type, EventResponse<?, ?> newResponse) {
+		eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
+		eventResponses.get(type).add(newResponse);
+		return eventResponses;
 	}
 
 	/**
 	 * replaces any existing event responses with the given event responses
 	 * 
 	 * @param type
-	 * @param newHandlers
+	 * @param newResponses
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceHandlers(
-			EventType type, List<EventResponse<?, ?>> newHandlers) {
-		eventHandlers.put(type, newHandlers);
-		return eventHandlers;
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+			EventType type, List<EventResponse<?, ?>> newResponses) {
+		eventResponses.put(type, newResponses);
+		return eventResponses;
 	}
 }
