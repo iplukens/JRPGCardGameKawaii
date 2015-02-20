@@ -23,4 +23,10 @@ public class Wesley extends Enemy {
 		super.setUpEventResponses();
 	}
 
+	@Override
+	public void erase() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

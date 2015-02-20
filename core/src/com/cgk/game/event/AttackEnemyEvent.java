@@ -1,9 +1,12 @@
 package com.cgk.game.event;
 
-public class AttackEnemyEvent extends ValueEvent implements GameEvent {
+import com.cgk.game.gameobject.units.UnitAttack;
 
-	public AttackEnemyEvent(int value) {
-		super(value);
+public class AttackEnemyEvent extends AttackEvent implements GameEvent {
+
+	// TODO implement targeting
+	public AttackEnemyEvent(UnitAttack attack) {
+		super(attack);
 	}
 
 	@Override

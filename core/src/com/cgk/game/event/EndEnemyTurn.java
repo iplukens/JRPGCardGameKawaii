@@ -1,6 +1,6 @@
 package com.cgk.game.event;
 
-public class EndEnemyTurn extends CloneableEvent implements GameEvent {
+public class EndEnemyTurn extends BaseEvent implements GameEvent {
 
 	@Override
 	public EventType getType() {

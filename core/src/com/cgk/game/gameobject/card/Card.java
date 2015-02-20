@@ -14,7 +14,8 @@ public abstract class Card extends GameObject {
 	private String cardName;
 	private String cardText;
 	private int resourceNumber;
-	protected List<GameEvent> cardEvents = new ArrayList<>();
+	protected List<GameEvent> playEvents = new ArrayList<>();
+	protected List<GameEvent> discardEvents = new ArrayList<>();
 	protected boolean alive = true;
 
 	protected Card(EventQueue eventQueue, int cardImage, int resourceNumber,
@@ -24,23 +25,43 @@ public abstract class Card extends GameObject {
 		this.resourceNumber = resourceNumber;
 		this.cardName = cardName;
 		this.cardText = cardText;
+		setPlayEvents();
+		setDiscardEvents();
 	}
+
+	/**
+	 * set up the events that occur when the card is discarded
+	 */
+	protected void setDiscardEvents() {
+
+	}
+
+	/**
+	 * set up the events that occur when the card is played
+	 */
+	protected abstract void setPlayEvents();
 
 	public void play() {
 		sendEvent(new PlayEvent(this));
 		if (alive) {
-			sendCardEvents();
+			sendPlayEvents();
 		}
 	}
 
-	private void sendCardEvents() {
-		for (GameEvent event : cardEvents) {
+	private void sendPlayEvents() {
+		for (GameEvent event : playEvents) {
+			sendEvent(event);
+		}
+	}
+
+	public void sendDiscardEvents() {
+		for (GameEvent event : discardEvents) {
 			sendEvent(event);
 		}
 	}
 
 	public GameEvent getEvent(int index) {
-		return cardEvents.get(index);
+		return playEvents.get(index);
 	}
 
 	/**
@@ -116,6 +137,20 @@ public abstract class Card extends GameObject {
 	 */
 	public void setAlive(boolean alive) {
 		this.alive = alive;
+	}
+
+	/**
+	 * all cards are probably going to be drawn the same way...?
+	 */
+	@Override
+	public void draw() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void erase() {
+		// TODO
 	}
 
 }

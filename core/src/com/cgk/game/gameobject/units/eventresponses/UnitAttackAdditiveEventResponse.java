@@ -1,6 +1,6 @@
 package com.cgk.game.gameobject.units.eventresponses;
 
-import com.cgk.game.event.AttackAdditiveEvent;
+import com.cgk.game.event.cardevents.AttackAdditiveEvent;
 import com.cgk.game.gameobject.eventresponses.EventResponse;
 import com.cgk.game.gameobject.units.UnitObject;
 

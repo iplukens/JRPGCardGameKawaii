@@ -1,6 +1,6 @@
 package com.cgk.game.event;
 
-public abstract class CloneableEvent implements GameEvent {
+public abstract class BaseEvent implements GameEvent {
 
 	public GameEvent cloneEvent() {
 		try {
@@ -9,5 +9,9 @@ public abstract class CloneableEvent implements GameEvent {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public boolean hasPriority() {
+		return false;
 	}
 }

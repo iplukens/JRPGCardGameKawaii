@@ -37,10 +37,12 @@ public abstract class GameObject {
 	protected abstract void setUpEventResponses();
 
 	public abstract void draw();
+	
+	public abstract void erase();
 
 	public void respondToEvent(GameEvent event) {
-		List<EventResponse<?, ?>> responses = eventResponses
-				.get(event.getType());
+		List<EventResponse<?, ?>> responses = eventResponses.get(event
+				.getType());
 		if (responses != null) {
 			for (EventResponse<?, ?> response : responses) {
 				response.respond(this, event);
@@ -83,7 +85,7 @@ public abstract class GameObject {
 	 * @param newResponse
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceResponses(
 			EventType type, EventResponse<?, ?> newResponse) {
 		eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
 		eventResponses.get(type).add(newResponse);
@@ -97,9 +99,13 @@ public abstract class GameObject {
 	 * @param newResponses
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceResponses(
 			EventType type, List<EventResponse<?, ?>> newResponses) {
 		eventResponses.put(type, newResponses);
 		return eventResponses;
+	}
+
+	protected void unregister() {
+		eventQueue.unregisterGameObject(this);
 	}
 }
