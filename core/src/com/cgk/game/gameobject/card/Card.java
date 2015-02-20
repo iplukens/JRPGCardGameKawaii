@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
+import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.system.EventQueue;
 
@@ -14,7 +15,7 @@ public abstract class Card extends GameObject {
 	private String cardName;
 	private String cardText;
 	private int resourceNumber;
-	protected List<GameEvent> playEvents = new ArrayList<>();
+	protected List<CardEffectEvent> playEvents = new ArrayList<>();
 	protected List<GameEvent> discardEvents = new ArrayList<>();
 	protected boolean alive = true;
 
@@ -145,7 +146,13 @@ public abstract class Card extends GameObject {
 	@Override
 	public void draw() {
 		// TODO Auto-generated method stub
-
+		// draw all the card affects...!
+		int start = 0;
+		for (int i = 0; i < playEvents.size(); i++) {
+			CardEffectEvent event = playEvents.get(i);
+			event.drawPlayInfo(start);
+			start += event.getPlayInfoSize();
+		}
 	}
 
 	@Override

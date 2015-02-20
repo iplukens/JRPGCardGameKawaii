@@ -3,7 +3,6 @@ package com.cgk.game.gameobject.units.hero;
 import com.cgk.game.event.AttackEnemyEvent;
 import com.cgk.game.event.DefeatEvent;
 import com.cgk.game.event.EventType;
-import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
 import com.cgk.game.system.EventQueue;

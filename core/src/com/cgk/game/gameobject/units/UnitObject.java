@@ -35,11 +35,11 @@ public abstract class UnitObject extends GameObject {
 		setUpResistances();
 	}
 
-	private void setUpResistances() {
+	protected void setUpResistances() {
 		resistances = new HashMap<UnitAttack.AttackType, Double>();
 		AttackType[] resistanceTypes = AttackType.values();
+		double resistanceBaseValue = 1.0;
 		for (AttackType type : resistanceTypes) {
-			double resistanceBaseValue = 1.0;
 			resistances.put(type, resistanceBaseValue);
 		}
 	}
@@ -72,6 +72,16 @@ public abstract class UnitObject extends GameObject {
 	}
 
 	/**
+	 * add to the current resistance value
+	 * 
+	 * @param attackType
+	 * @param addedValue
+	 */
+	public void addResistanceTo(AttackType attackType, Double addedValue) {
+		resistances.put(attackType, resistances.get(attackType) + addedValue);
+	}
+
+	/**
 	 * events the unit sends when it dies
 	 */
 	protected abstract void sendOnDeathEvents();
@@ -95,7 +105,7 @@ public abstract class UnitObject extends GameObject {
 	public abstract void sendAttackEvent();
 
 	protected boolean isDead() {
-		return health < 0;
+		return health <= 0;
 	}
 
 	/*
