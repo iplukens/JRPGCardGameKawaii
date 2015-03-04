@@ -1,4 +1,4 @@
-package com.cgk.game.gameobject.util;
+package com.cgk.game.system;
 
 import com.cgk.game.event.DroppedComobEvent;
 import com.cgk.game.event.EventType;
@@ -8,6 +8,7 @@ import com.cgk.game.event.TypeComboEvent;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
+import com.cgk.game.system.eventresponses.ComboTrackerPlayResponse;
 
 public class ComboTracker extends GameObject {
 
