@@ -64,3 +64,5 @@ build/
 .DS_Store
 /build/
 /build/
+/.nb-gradle/profiles/private/
+/.nb-gradle/private/

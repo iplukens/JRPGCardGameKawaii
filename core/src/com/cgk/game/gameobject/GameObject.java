@@ -1,5 +1,6 @@
 package com.cgk.game.gameobject;
 
+import com.badlogic.gdx.assets.AssetManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.eventresponses.EventResponse;
+import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
 
 public abstract class GameObject {
@@ -20,7 +22,9 @@ public abstract class GameObject {
 	@Autowired
 	private EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
-
+        private List<Asset> assets = new ArrayList<>();
+        @Autowired AssetManager assetManager;
+        
 	public GameObject() {
 		eventQueue.registerGameObject(this);
 		eventResponses = new HashMap<>();
@@ -102,4 +106,10 @@ public abstract class GameObject {
 		eventResponses.put(type, newResponses);
 		return eventResponses;
 	}
+
+    public void loadAssets() {
+        for(Asset asset : assets){
+            assetManager.load(asset.getFileName(), asset.getClass());
+        }
+    }
 }
