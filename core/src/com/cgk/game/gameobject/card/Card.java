@@ -7,6 +7,7 @@ import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
 import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.EventQueue;
 
 public abstract class Card extends GameObject {
@@ -15,9 +16,11 @@ public abstract class Card extends GameObject {
 	private String cardName;
 	private String cardText;
 	private int resourceNumber;
+	private AttackType startingCardType;
+	private AttackType endingCardType;
 	protected List<CardEffectEvent> playEvents = new ArrayList<>();
 	protected List<GameEvent> discardEvents = new ArrayList<>();
-	protected boolean alive = true;
+	protected boolean alive = true;	
 
 	protected Card(EventQueue eventQueue, int cardImage, int resourceNumber,
 			String cardName, String cardText) {
@@ -158,6 +161,22 @@ public abstract class Card extends GameObject {
 	@Override
 	public void erase() {
 		// TODO
+	}
+
+	public AttackType getStartingCardType() {
+		return startingCardType;
+	}
+
+	public void setStartingCardType(AttackType startingCardType) {
+		this.startingCardType = startingCardType;
+	}
+
+	public AttackType getEndingCardType() {
+		return endingCardType;
+	}
+
+	public void setEndingCardType(AttackType endingCardType) {
+		this.endingCardType = endingCardType;
 	}
 
 }
