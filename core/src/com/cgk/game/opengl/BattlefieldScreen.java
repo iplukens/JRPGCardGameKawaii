@@ -9,13 +9,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.system.Battlefield;
+import com.cgk.game.util.Constants;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,46 +35,27 @@ public class BattlefieldScreen extends ScreenAdapter {
     Battlefield battlefield;
     Music music;
     @Autowired AssetManager assetManager;
-    
+    private Texture magician;
+    private Sound laser;
+ 
     public BitmapFont font;
 
-    public BattlefieldScreen(CardGameKawaii game) {
+    public BattlefieldScreen(CardGameKawaii game, Battlefield battlefield) {
         this.game = game;
 
-        guiCam = new OrthographicCamera(320, 480);
-        guiCam.position.set(320 / 2, 480 / 2, 0);
+        guiCam = new OrthographicCamera(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        guiCam.position.set(Constants.SCREEN_WIDTH / 2, Constants.SCREEN_HEIGHT / 2, 0);
+         magician = new Texture(Gdx.files.internal("girl.png"));
+
+         this.battlefield = battlefield;
+         loadAssets();
     }
 
     public void update() {
-        if (Gdx.input.justTouched()) {
-            /**
-             * guiCam.unproject(touchPoint.set(Gdx.input.getX(),
-             * Gdx.input.getY(), 0));
-             *
-             * if (playBounds.contains(touchPoint.x, touchPoint.y)) {
-             * Assets.playSound(Assets.clickSound); game.setScreen(new
-             * GameScreen(game)); return; } if
-             * (highscoresBounds.contains(touchPoint.x, touchPoint.y)) {
-             * Assets.playSound(Assets.clickSound); game.setScreen(new
-             * HighscoresScreen(game)); return; } if
-             * (helpBounds.contains(touchPoint.x, touchPoint.y)) {
-             * Assets.playSound(Assets.clickSound); game.setScreen(new
-             * HelpScreen(game)); return; } if
-             * (soundBounds.contains(touchPoint.x, touchPoint.y)) {
-             * Assets.playSound(Assets.clickSound); Settings.soundEnabled =
-             * !Settings.soundEnabled; if (Settings.soundEnabled) {
-             * Assets.music.play(); } else { Assets.music.pause(); } }
-             *
-             *
-             */
-        }
-    }
-
-    public void setBattlefield(Battlefield battlefield) {
-        this.battlefield = battlefield;
         
     }
-  
+
+
     public void draw() {
         GL20 gl = Gdx.gl;
         gl.glClearColor(1, 0, 0, 1);
@@ -89,6 +74,18 @@ public class BattlefieldScreen extends ScreenAdapter {
         //game.batcher.draw(Assets.mainMenu, 10, 200 - 110 / 2, 300, 110);
         //game.batcher.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
         game.batcher.end();
+        
+        /**
+        //Update the card if
+        if (Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            card.x = touchPos.x - card.width / 2;
+            card.y = touchPos.y - card.height / 2;
+            laser.play();
+        }
+        * */
     }
 
     @Override
@@ -108,19 +105,37 @@ public class BattlefieldScreen extends ScreenAdapter {
         font = new BitmapFont(Gdx.files.internal("data/font.fnt"), Gdx.files.internal("data/font.png"), false);
 
         //Setup Music that will play
-        music = Gdx.audio.newMusic(Gdx.files.internal(battlefield.getMusic()));
+        music = Gdx.audio.newMusic(Gdx.files.internal(battlefield.getMusicFileLocation()));
         music.setLooping(true);
         music.setVolume(0.5f);
 
+        laser = Gdx.audio.newSound(Gdx.files.internal("laser.wav"));
+         
         //Get and load all sounds/graphics objects will use
         //Classes are responsbile for their sounds, animations,bitmaps 
         ArrayList<GameObject> objectsToLoad = new ArrayList<>();
         objectsToLoad.addAll(battlefield.getEnemies());
         objectsToLoad.addAll(battlefield.getDeck().getCards());
         objectsToLoad.addAll(battlefield.getHeroes());
-        for (GameObject object : objectsToLoad) {
-            object.loadAssets();
+        
+        /*
+        int PADDING = 2;
+        boolean borderDuplication = true;
+        boolean someUndocumentedArguement = false;
+        PixmapPacker packer = new PixmapPacker(Constants.PIXELPACKER_PAGE_WIDTH, Constants.PIXELPACKER_PAGE_HEIGHT, Format.RGB565, PADDING, borderDuplication);
+        
+        //TODO figure out what to do here
+        //I want each object to give me its textures
+        //then we allocate 4MB to a texture sheet as a page
+        //this can be referenced from atlas after that.
+        ArrayList<Texture> textures = new ArrayList<>();
+        assetManager.getAll(PixMap.class, textures);
+        for (pixMap pixMap: textures){
+            packer.pack(null, null);
         }
+        TextureAtlas atlas = packer.generateTextureAtlas(TextureFilter.Linear, TextureFilter.Linear, someUndocumentedArguement);
+        atlas.
+        */
     }
 }
 
