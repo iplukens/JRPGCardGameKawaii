@@ -23,6 +23,7 @@ public abstract class GameObject {
 	private EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
         private List<Asset> assets = new ArrayList<>();
+        private List<Asset> textureAssets = new ArrayList<>();
         @Autowired AssetManager assetManager;
         
 	public GameObject() {
@@ -107,9 +108,11 @@ public abstract class GameObject {
 		return eventResponses;
 	}
 
-    public void loadAssets() {
-        for(Asset asset : assets){
-            assetManager.load(asset.getFileName(), asset.getClass());
-        }
+    public List<Asset> getAssets() {
+       return assets;
+    }
+    
+     public List<Asset> getTextureAssets() {
+       return textureAssets;
     }
 }

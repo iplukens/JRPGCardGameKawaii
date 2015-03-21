@@ -10,17 +10,25 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.system.Asset;
 import com.cgk.game.system.Battlefield;
 import com.cgk.game.util.Constants;
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -117,8 +125,7 @@ public class BattlefieldScreen extends ScreenAdapter {
         objectsToLoad.addAll(battlefield.getEnemies());
         objectsToLoad.addAll(battlefield.getDeck().getCards());
         objectsToLoad.addAll(battlefield.getHeroes());
-        
-        /*
+         
         int PADDING = 2;
         boolean borderDuplication = true;
         boolean someUndocumentedArguement = false;
@@ -128,14 +135,17 @@ public class BattlefieldScreen extends ScreenAdapter {
         //I want each object to give me its textures
         //then we allocate 4MB to a texture sheet as a page
         //this can be referenced from atlas after that.
-        ArrayList<Texture> textures = new ArrayList<>();
-        assetManager.getAll(PixMap.class, textures);
-        for (pixMap pixMap: textures){
-            packer.pack(null, null);
+        for(GameObject object : objectsToLoad){
+            List<Asset> assets = object.getTextureAssets();
+            for(Asset asset : assets){
+                 Pixmap pixmap = new Pixmap(Gdx.files.internal(asset.getFileName()));
+                 packer.pack(asset.getFileName(), pixmap);
+            }
         }
+
         TextureAtlas atlas = packer.generateTextureAtlas(TextureFilter.Linear, TextureFilter.Linear, someUndocumentedArguement);
-        atlas.
-        */
+
+        
     }
 }
 
