@@ -1,9 +1,9 @@
 package com.cgk.game.system;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.Hand;
 import com.cgk.game.gameobject.units.enemy.Enemy;
@@ -11,41 +11,55 @@ import com.cgk.game.gameobject.units.hero.Hero;
 
 public class Battlefield {
 
-    private List<Enemy> enemies;
-    private List<Hero> heroes;
-    private Deck deck;
-    private Hand hand;
-    private EventQueue events;
-    private String musicFileLocation;
+	private List<Enemy> enemies;
+	private List<Hero> heroes;
+	private Deck deck;
+	private Hand hand;
+	private String musicFileLocation;
+	private GameState gameState;
 
-    public Deck getDeck() {
-        return deck;
-    }
+	// TODO: support multiple levels
 
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
+	public Deck getDeck() {
+		return deck;
+	}
 
-    public List<Hero> getHeroes() {
-        return heroes;
-    }
+	public List<Enemy> getEnemies() {
+		return enemies;
+	}
 
-    public String getMusicFileLocation() {
-        return musicFileLocation;
-    }
-    
-    public void setMusicFileLocation(String fileLocation){
-        musicFileLocation = fileLocation;
-    }
+	public List<Hero> getHeroes() {
+		return heroes;
+	}
 
-    public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-        deck.draw(batcher, atlas);
-        hand.draw(batcher, atlas);
-        for(Enemy enemy : enemies) {
-            enemy.draw(batcher, atlas);
-        }
-        for(Hero hero : heroes){
-            hero.draw(batcher, atlas);
-        }   
-    }  
+	public String getMusicFileLocation() {
+		return musicFileLocation;
+	}
+
+	public void setMusicFileLocation(String fileLocation) {
+		musicFileLocation = fileLocation;
+	}
+
+	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
+		deck.draw(batcher, atlas);
+		hand.draw(batcher, atlas);
+		for (Enemy enemy : enemies) {
+			enemy.draw(batcher, atlas);
+		}
+		for (Hero hero : heroes) {
+			hero.draw(batcher, atlas);
+		}
+	}
+
+	public GameState getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+	public Hand getHand() {
+		return hand;
+	}
 }

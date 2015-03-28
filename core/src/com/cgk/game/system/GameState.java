@@ -9,6 +9,7 @@ package com.cgk.game.system;
  *
  * @author cgmcandrews
  */
-public class GameState {
-    
+public enum GameState {
+	PLAYER_TURN, ENEMY_TURN, LEVEL_ADVANCE, VICTORY, DEFEAT
+
 }
