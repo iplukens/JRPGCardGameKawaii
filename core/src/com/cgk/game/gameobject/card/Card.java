@@ -1,5 +1,9 @@
 package com.cgk.game.gameobject.card;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,24 +11,23 @@ import java.util.List;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
 import com.cgk.game.util.Constants;
 
 public abstract class Card extends GameObject {
 
-    private int cardImage;
     private String cardName;
     private String cardText;
-    private int resourceNumber;
+    private List<Asset> cardAssets;
+    private Asset currentGraphic;
     protected List<GameEvent> cardEvents = new ArrayList<>();
     protected boolean alive = true;
     private Rectangle cardGraphic;
 
-    protected Card(EventQueue eventQueue, int cardImage, int resourceNumber,
+    protected Card(EventQueue eventQueue, 
             String cardName, String cardText) {
         super(eventQueue);
-        this.cardImage = cardImage;
-        this.resourceNumber = resourceNumber;
         this.cardName = cardName;
         this.cardText = cardText;
         cardGraphic = new Rectangle(0, 0, Constants.DEFAULT_CARD_WIDTH, Constants.DEFAULT_CARD_HEIGHT);
@@ -48,12 +51,6 @@ public abstract class Card extends GameObject {
         return cardEvents.get(index);
     }
 
-    /**
-     * @return the cardImage
-     */
-    public int getCardImage() {
-        return cardImage;
-    }
 
     /**
      * @return the cardName
@@ -70,25 +67,12 @@ public abstract class Card extends GameObject {
     }
 
     /**
-     * @return the resourceNumber
-     */
-    public int getResourceNumber() {
-        return resourceNumber;
-    }
-
-    /**
      * @return the alive
      */
     public boolean isAlive() {
         return alive;
     }
 
-    /**
-     * @param cardImage the cardImage to set
-     */
-    public void setCardImage(int cardImage) {
-        this.cardImage = cardImage;
-    }
 
     /**
      * @param cardName the cardName to set
@@ -105,13 +89,6 @@ public abstract class Card extends GameObject {
     }
 
     /**
-     * @param resourceNumber the resourceNumber to set
-     */
-    public void setResourceNumber(int resourceNumber) {
-        this.resourceNumber = resourceNumber;
-    }
-
-    /**
      * @param alive the alive to set
      */
     public void setAlive(boolean alive) {
@@ -121,7 +98,37 @@ public abstract class Card extends GameObject {
     /**
      * @Return cardGraphic get the graphical representation of the card. OMG
      */
-    public Rectangle getCardGraphic(){
+    public Rectangle getCardGraphic() {
         return cardGraphic;
     }
+
+    @Override
+    protected void setupAssets() {
+        for (Asset asset : cardAssets) {
+            if (asset.getAssetClass().equals(Texture.class)) {
+                textureAssets.add(asset);
+            } else {
+                soundAssets.add(asset);
+            }
+        }
+
+        if (!textureAssets.isEmpty()) {
+            currentGraphic = textureAssets.get(0);
+        }
+    }
+
+    protected void setupAssets(List<Asset> assets){
+        cardAssets = assets;
+        setupAssets();
+    }
+    
+    @Override
+    public void draw(SpriteBatch batcher, TextureAtlas atlas) {
+        batcher.draw(atlas.findRegion(currentGraphic.getFileName()).getTexture(),
+                cardGraphic.x,
+                cardGraphic.y,
+                cardGraphic.width,
+                cardGraphic.height);
+    }
+
 }

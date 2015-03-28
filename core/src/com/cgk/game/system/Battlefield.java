@@ -1,5 +1,7 @@
 package com.cgk.game.system;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import java.util.List;
 
 import com.cgk.game.gameobject.Deck;
@@ -10,7 +12,7 @@ import com.cgk.game.gameobject.units.hero.Hero;
 public class Battlefield {
 
     private List<Enemy> enemies;
-    private List<Hero> hero;
+    private List<Hero> heroes;
     private Deck deck;
     private Hand hand;
     private EventQueue events;
@@ -25,7 +27,7 @@ public class Battlefield {
     }
 
     public List<Hero> getHeroes() {
-        return hero;
+        return heroes;
     }
 
     public String getMusicFileLocation() {
@@ -35,4 +37,15 @@ public class Battlefield {
     public void setMusicFileLocation(String fileLocation){
         musicFileLocation = fileLocation;
     }
+
+    public void draw(SpriteBatch batcher, TextureAtlas atlas) {
+        deck.draw(batcher, atlas);
+        hand.draw(batcher, atlas);
+        for(Enemy enemy : enemies) {
+            enemy.draw(batcher, atlas);
+        }
+        for(Hero hero : heroes){
+            hero.draw(batcher, atlas);
+        }   
+    }  
 }

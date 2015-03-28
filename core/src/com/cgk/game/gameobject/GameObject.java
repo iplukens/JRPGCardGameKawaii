@@ -1,6 +1,8 @@
 package com.cgk.game.gameobject;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,9 @@ public abstract class GameObject {
 	private EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
         private List<Asset> assets = new ArrayList<>();
-        private List<Asset> textureAssets = new ArrayList<>();
+        protected List<Asset> textureAssets = new ArrayList<>();
+        protected List<Asset> musicAssets = new ArrayList<>();
+        protected List<Asset> soundAssets = new ArrayList<>();
         @Autowired AssetManager assetManager;
         
 	public GameObject() {
@@ -41,7 +45,7 @@ public abstract class GameObject {
 
 	protected abstract void setUpEventResponses();
 
-	public abstract void draw();
+	public abstract void draw(SpriteBatch batcher, TextureAtlas atlas);
 
 	public void respondToEvent(GameEvent event) {
 		List<EventResponse<?, ?>> responses = eventResponses
@@ -109,10 +113,24 @@ public abstract class GameObject {
 	}
 
     public List<Asset> getAssets() {
+       List<Asset> assets = new ArrayList<>();
+       assets.addAll(textureAssets);
+       assets.addAll(musicAssets);
+       assets.addAll(soundAssets);
        return assets;
     }
     
-     public List<Asset> getTextureAssets() {
+    protected abstract void setupAssets();
+    
+    public List<Asset> getTextureAssets() {
        return textureAssets;
+    }
+    
+    public List<Asset> getSoundAssets() {
+       return soundAssets;
+    }
+    
+    public List<Asset> getMusicAssets() {
+       return musicAssets;
     }
 }
