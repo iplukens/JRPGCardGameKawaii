@@ -69,13 +69,14 @@ public class BattlefieldScreen extends ScreenAdapter {
 		 */
 		switch (battlefield.getGameState()) {
 		case PLAYER_TURN:
-			if (Gdx.input.justTouched()) {
+			if (Gdx.input.justTouched()) {				
 				Vector2 touchPos = new Vector2();
 				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
 				battlefield.getHand().processJustTouched(touchPos);
-			} else if (Gdx.input.isTouched()) {
-				Vector3 touchPos = new Vector3();
-				touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			} if (Gdx.input.isTouched()) {
+				Vector2 touchPos = new Vector2();
+				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
+				battlefield.getHand().processTouch(touchPos);
 			}
 			// check input
 			// if yes, process it
