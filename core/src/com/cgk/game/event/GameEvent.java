@@ -5,4 +5,6 @@ public interface GameEvent extends Cloneable {
 	public EventType getType();
 	
 	public GameEvent cloneEvent();
+
+	public boolean hasPriority();
 }

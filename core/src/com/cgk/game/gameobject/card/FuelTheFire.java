@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.cgk.game.event.AttackAdditiveEvent;
+import com.cgk.game.event.cardevents.AttackAdditiveEvent;
 import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
 
@@ -20,9 +20,13 @@ public class FuelTheFire extends Card {
         this.cardEvents.add(new AttackAdditiveEvent(50));
     }
 
-    @Override
-    protected void setupEventResponses() {
-		// TODO Auto-generated method stub
+	@Override
+	protected void setPlayEvents() {
+		this.playEvents.add(new AttackAdditiveEvent(50));
+	}
 
-    }
+	@Override
+	protected void setupEventResponses() {
+		// TODO
+	}
 }

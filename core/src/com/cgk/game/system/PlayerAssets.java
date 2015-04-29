@@ -44,4 +44,9 @@ public class PlayerAssets {
 		return new PlayerAssets();
 	}
 
+	public int getMaxHandSize() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
 }

@@ -27,7 +27,14 @@ public class Wesley extends Enemy {
 
     @Override
     protected void setupAssets() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
+		// To change body of generated methods, choose Tools | Templates.
     }
+
+	@Override
+	public void erase() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

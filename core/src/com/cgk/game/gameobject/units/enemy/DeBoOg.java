@@ -1,11 +1,12 @@
 package com.cgk.game.gameobject.units.enemy;
 
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.cgk.game.event.AttackAdditiveEvent;
-import com.cgk.game.event.AttackMultiplierEvent;
 import com.cgk.game.event.AttackPlayerEvent;
 import com.cgk.game.event.EventType;
+import com.cgk.game.event.cardevents.AttackAdditiveEvent;
+import com.cgk.game.event.cardevents.AttackMultiplierEvent;
 import com.cgk.game.gameobject.eventresponses.SendEventResponse;
 import com.cgk.game.system.EventQueue;
 
@@ -18,6 +19,12 @@ public class DeBoOg extends Enemy {
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public void erase() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

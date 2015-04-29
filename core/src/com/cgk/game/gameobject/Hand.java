@@ -2,18 +2,24 @@ package com.cgk.game.gameobject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.cgk.game.event.DiscardEvent;
+import com.cgk.game.event.DiscardedCardEvent;
+import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.card.Card;
+import com.cgk.game.gameobject.eventresponses.AddCardResponse;
+import com.cgk.game.gameobject.eventresponses.HandDiscardEventResponse;
 import com.cgk.game.system.EventQueue;
 import com.cgk.game.util.Constants;
 
-public class Hand extends GameObject {
+public class Hand extends CardLibrary {
 
+	private List<Card> cards = new ArrayList<>();
+	private Card touchedCard;
 	private Rectangle handArea;
 
 	public Hand(EventQueue eventQueue) {
@@ -25,11 +31,9 @@ public class Hand extends GameObject {
 				Constants.DEFAULT_CARD_HEIGHT / 2);
 	}
 
-	private List<Card> cards;
-	private Card touchedCard;
-
-	public void discard(Card card) throws InterruptedException {
-		sendEvent(new DiscardEvent(card));
+	public Hand(EventQueue eventQueue, List<Card> cards) {
+		super(eventQueue);
+		this.cards.addAll(cards);
 	}
 
 	@Override
@@ -39,24 +43,58 @@ public class Hand extends GameObject {
 		}
 	}
 
+	/**
+	 * discards the specified card
+	 * 
+	 * @param card
+	 * @throws InterruptedException
+	 */
+	public void discard(Card card) {
+		removeCard(card);
+		card.sendDiscardEvents();
+		sendEvent(new DiscardedCardEvent(card));
+	}
+
+	/**
+	 * discards a card at random
+	 */
+	public void discard() {
+		discard(getRandomCard());
+	}
+
+	private Card getRandomCard() {
+		Random random = new Random();
+		int randomNumber = random.nextInt(cards.size());
+		return cards.get(randomNumber);
+	}
+
+	public void removeCard(Card card) {
+		cards.remove(card);
+	}
+
+	public void addCard(Card card) {
+		cards.add(card);
+	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
 	@Override
 	protected void setupEventResponses() {
-		// TODO Auto-generated method stub
+		addResponse(EventType.DISCARD, new HandDiscardEventResponse());
+		addResponse(EventType.DRAWN_CARD, new AddCardResponse());
+	}
+
+	@Override
+	public void erase() {
 
 	}
 
 	@Override
 	protected void setupAssets() {
-		throw new UnsupportedOperationException("Not supported yet."); // To
-																		// change
-																		// body
-																		// of
-																		// generated
-																		// methods,
-																		// choose
-																		// Tools
-																		// |
-																		// Templates.
+		throw new UnsupportedOperationException("Not supported yet.");
+		// TODO, change body of generated methods, choose tools/templates
 	}
 
 	/**
@@ -88,6 +126,10 @@ public class Hand extends GameObject {
 		if (touchedCard != null) {
 			touchedCard.processTouch(touchPos);
 		}
+	}
+
+	public int getSize() {
+		return cards.size();
 	}
 
 }

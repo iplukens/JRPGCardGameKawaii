@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.cgk.game.event.DiscardEvent;
+import com.cgk.game.event.DiscardedCardEvent;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
+import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
 import com.cgk.game.util.Constants;
@@ -23,9 +25,14 @@ public abstract class Card extends GameObject {
 	protected List<Asset> cardAssets = new ArrayList<>();
 	private Asset currentGraphic;
 	protected List<GameEvent> cardEvents = new ArrayList<>();
-	protected boolean alive = true;
 	private Rectangle cardArea;
 	private Vector2 lastTouchedPos;
+	private int resourceNumber;
+	private AttackType startingCardType;
+	private AttackType endingCardType;
+	protected List<CardEffectEvent> playEvents = new ArrayList<>();
+	protected List<GameEvent> discardEvents = new ArrayList<>();
+	protected boolean alive = true;
 
 	protected Card(EventQueue eventQueue, String cardName, String cardText) {
 		super(eventQueue);
@@ -35,23 +42,43 @@ public abstract class Card extends GameObject {
 				Constants.DEFAULT_CARD_HEIGHT);
 		cardArea.setCenter(Constants.DEFAULT_CARD_WIDTH / 2,
 				Constants.DEFAULT_CARD_HEIGHT / 2);
+		setPlayEvents();
+		setDiscardEvents();
 	}
+
+	/**
+	 * set up the events that occur when the card is discarded
+	 */
+	protected void setDiscardEvents() {
+
+	}
+
+	/**
+	 * set up the events that occur when the card is played
+	 */
+	protected abstract void setPlayEvents();
 
 	public void play() {
 		sendEvent(new PlayEvent(this));
 		if (alive) {
-			sendCardEvents();
+			sendPlayEvents();
 		}
 	}
 
-	private void sendCardEvents() {
-		for (GameEvent event : cardEvents) {
+	private void sendPlayEvents() {
+		for (GameEvent event : playEvents) {
+			sendEvent(event);
+		}
+	}
+
+	public void sendDiscardEvents() {
+		for (GameEvent event : discardEvents) {
 			sendEvent(event);
 		}
 	}
 
 	public GameEvent getEvent(int index) {
-		return cardEvents.get(index);
+		return playEvents.get(index);
 	}
 
 	/**
@@ -100,6 +127,8 @@ public abstract class Card extends GameObject {
 	}
 
 	/**
+	 * <<<<<<< HEAD
+	 * 
 	 * @Return cardGraphic get the graphical representation of the card. OMG
 	 */
 	public Rectangle getCardArea() {
@@ -127,7 +156,7 @@ public abstract class Card extends GameObject {
 	}
 
 	public void discard() {
-		sendEvent(new DiscardEvent(this));
+		sendEvent(new DiscardedCardEvent(this));
 	}
 
 	@Override
@@ -153,7 +182,31 @@ public abstract class Card extends GameObject {
 				|| touchPos.y < Constants.DISCARD_SCREEN_FLOOR) {
 			discard();
 		}
-		// TODO: move cards based on input
+	}
+
+	@Override
+	public void erase() {
+		// TODO
+	}
+
+	public AttackType getStartingCardType() {
+		return startingCardType;
+	}
+
+	public void setStartingCardType(AttackType startingCardType) {
+		this.startingCardType = startingCardType;
+	}
+
+	public AttackType getEndingCardType() {
+		return endingCardType;
+	}
+
+	public void setEndingCardType(AttackType endingCardType) {
+		this.endingCardType = endingCardType;
+	}
+
+	public int getResourceNumber() {
+		return resourceNumber;
 	}
 
 }

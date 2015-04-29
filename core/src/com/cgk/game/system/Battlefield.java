@@ -33,6 +33,9 @@ public class Battlefield {
 		enemies = levelAssets.getEnemies(queue, 1);
 		heroes = playerAssets.getHeroes(queue);
 		gameState = GameState.PLAYER_TURN;
+		for (int i = 0; i < playerAssets.getMaxHandSize(); i++) {
+			deck.drawCard();
+		}
 	}
 
 	public Deck getDeck() {

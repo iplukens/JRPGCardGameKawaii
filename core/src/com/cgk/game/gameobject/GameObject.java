@@ -47,6 +47,8 @@ public abstract class GameObject {
 
 	public abstract void draw(SpriteBatch batcher, TextureAtlas atlas);
 
+	public abstract void erase();
+
 	public void respondToEvent(GameEvent event) {
 		List<EventResponse<?, ?>> responses = eventResponses.get(event
 				.getType());
@@ -92,7 +94,7 @@ public abstract class GameObject {
 	 * @param newResponse
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceResponses(
 			EventType type, EventResponse<?, ?> newResponse) {
 		eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
 		eventResponses.get(type).add(newResponse);
@@ -106,7 +108,7 @@ public abstract class GameObject {
 	 * @param newResponses
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> replaceEvents(
+	protected Map<EventType, List<EventResponse<?, ?>>> replaceResponses(
 			EventType type, List<EventResponse<?, ?>> newResponses) {
 		eventResponses.put(type, newResponses);
 		return eventResponses;
@@ -136,5 +138,9 @@ public abstract class GameObject {
 
 	public List<Asset> getMusicAssets() {
 		return musicAssets;
+	}
+
+	protected void unregister() {
+		eventQueue.unregisterGameObject(this);
 	}
 }

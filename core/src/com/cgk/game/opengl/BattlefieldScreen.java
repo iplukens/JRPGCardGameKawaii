@@ -145,6 +145,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		objectsToLoad.add(battlefield.getDeck());
 		objectsToLoad.addAll(battlefield.getEnemies());
 		objectsToLoad.addAll(battlefield.getDeck().getCards());
+		objectsToLoad.addAll(battlefield.getHand().getCards());
 		objectsToLoad.addAll(battlefield.getHeroes());
 
 		int PADDING = 2;

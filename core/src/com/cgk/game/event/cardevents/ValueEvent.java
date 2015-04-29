@@ -1,6 +1,7 @@
-package com.cgk.game.event;
+package com.cgk.game.event.cardevents;
 
-public abstract class ValueEvent extends CloneableEvent implements GameEvent {
+
+public abstract class ValueEvent extends CardEffectEvent {
 
 	int value;
 
