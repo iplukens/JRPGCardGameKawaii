@@ -20,7 +20,7 @@ public abstract class Card extends GameObject {
 
 	private String cardName;
 	private String cardText;
-	private List<Asset> cardAssets;
+	protected List<Asset> cardAssets = new ArrayList<>();
 	private Asset currentGraphic;
 	protected List<GameEvent> cardEvents = new ArrayList<>();
 	protected boolean alive = true;

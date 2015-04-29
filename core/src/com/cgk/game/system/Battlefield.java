@@ -20,6 +20,21 @@ public class Battlefield {
 
 	// TODO: support multiple levels
 
+	/**
+	 * 
+	 * @param playerAssets
+	 * @param levelId
+	 */
+	public Battlefield(PlayerAssets playerAssets, int levelId) {
+		EventQueue queue = new EventQueue();
+		deck = playerAssets.getDeck(queue);
+		hand = new Hand(queue);
+		LevelAssets levelAssets = new LevelAssets(levelId);
+		enemies = levelAssets.getEnemies(queue, 1);
+		heroes = playerAssets.getHeroes(queue);
+		gameState = GameState.PLAYER_TURN;
+	}
+
 	public Deck getDeck() {
 		return deck;
 	}

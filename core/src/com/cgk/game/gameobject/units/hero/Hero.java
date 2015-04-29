@@ -30,8 +30,8 @@ public class Hero extends UnitObject {
     }
 
     @Override
-    protected void setUpEventResponses() {
-        super.setUpEventResponses();
+    protected void setupEventResponses() {
+        super.setupEventResponses();
     }
 
     @Override

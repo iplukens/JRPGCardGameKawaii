@@ -1,8 +1,5 @@
 package com.cgk.game.gameobject;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +9,9 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.eventresponses.EventResponse;
@@ -24,32 +24,32 @@ public abstract class GameObject {
 	@Autowired
 	private EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
-        private List<Asset> assets = new ArrayList<>();
-        protected List<Asset> textureAssets = new ArrayList<>();
-        protected List<Asset> musicAssets = new ArrayList<>();
-        protected List<Asset> soundAssets = new ArrayList<>();
-        @Autowired AssetManager assetManager;
-        
+	protected List<Asset> textureAssets = new ArrayList<>();
+	protected List<Asset> musicAssets = new ArrayList<>();
+	protected List<Asset> soundAssets = new ArrayList<>();
+	@Autowired
+	AssetManager assetManager;
+
 	public GameObject() {
 		eventQueue.registerGameObject(this);
 		eventResponses = new HashMap<>();
-		setUpEventResponses();
+		setupEventResponses();
 	}
 
 	public GameObject(EventQueue eventQueue) {
 		this.eventQueue = eventQueue;
 		eventQueue.registerGameObject(this);
 		eventResponses = new HashMap<>();
-		setUpEventResponses();
+		setupEventResponses();
 	}
 
-	protected abstract void setUpEventResponses();
+	protected abstract void setupEventResponses();
 
 	public abstract void draw(SpriteBatch batcher, TextureAtlas atlas);
 
 	public void respondToEvent(GameEvent event) {
-		List<EventResponse<?, ?>> responses = eventResponses
-				.get(event.getType());
+		List<EventResponse<?, ?>> responses = eventResponses.get(event
+				.getType());
 		if (responses != null) {
 			for (EventResponse<?, ?> response : responses) {
 				response.respond(this, event);
@@ -112,25 +112,29 @@ public abstract class GameObject {
 		return eventResponses;
 	}
 
-    public List<Asset> getAssets() {
-       List<Asset> assets = new ArrayList<>();
-       assets.addAll(textureAssets);
-       assets.addAll(musicAssets);
-       assets.addAll(soundAssets);
-       return assets;
-    }
-    
-    protected abstract void setupAssets();
-    
-    public List<Asset> getTextureAssets() {
-       return textureAssets;
-    }
-    
-    public List<Asset> getSoundAssets() {
-       return soundAssets;
-    }
-    
-    public List<Asset> getMusicAssets() {
-       return musicAssets;
-    }
+	public List<Asset> getAssets() {
+		List<Asset> assets = new ArrayList<>();
+		assets.addAll(textureAssets);
+		assets.addAll(musicAssets);
+		assets.addAll(soundAssets);
+		return assets;
+	}
+
+	/**
+	 * put all assets into their respective array lists (textureAssets,
+	 * soundAssets, or musicAssets)
+	 */
+	protected abstract void setupAssets();
+
+	public List<Asset> getTextureAssets() {
+		return textureAssets;
+	}
+
+	public List<Asset> getSoundAssets() {
+		return soundAssets;
+	}
+
+	public List<Asset> getMusicAssets() {
+		return musicAssets;
+	}
 }

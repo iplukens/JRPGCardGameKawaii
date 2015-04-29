@@ -26,7 +26,7 @@ public abstract class UnitObject extends GameObject {
 	}
 
 	@Override
-	protected void setUpEventResponses() {
+	protected void setupEventResponses() {
 		addResponse(EventType.ADD_BUFF, new UnitAttackAdditiveEventResponse());
 		addResponse(EventType.MULT_BUFF, new UnitAttackMultiplierEventResponse());
 	}

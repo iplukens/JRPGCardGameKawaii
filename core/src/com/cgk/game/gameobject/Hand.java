@@ -40,7 +40,7 @@ public class Hand extends GameObject {
 	}
 
 	@Override
-	protected void setUpEventResponses() {
+	protected void setupEventResponses() {
 		// TODO Auto-generated method stub
 
 	}
@@ -78,12 +78,16 @@ public class Hand extends GameObject {
 	}
 
 	private void clearJustTouched() {
-		touchedCard.resetTouchStatus();
-		touchedCard = null;
+		if (touchedCard != null) {
+			touchedCard.resetTouchStatus();
+			touchedCard = null;
+		}
 	}
 
 	public void processTouch(Vector2 touchPos) {
-		touchedCard.processTouch(touchPos);
+		if (touchedCard != null) {
+			touchedCard.processTouch(touchPos);
+		}
 	}
 
 }

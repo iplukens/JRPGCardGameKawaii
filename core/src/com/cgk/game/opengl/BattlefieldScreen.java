@@ -25,7 +25,6 @@ import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.system.Asset;
@@ -46,6 +45,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 	@Autowired
 	AssetManager assetManager;
 	TextureAtlas atlas;
+	public boolean assetsLoaded = false;
 
 	private Sound laser;
 
@@ -69,11 +69,12 @@ public class BattlefieldScreen extends ScreenAdapter {
 		 */
 		switch (battlefield.getGameState()) {
 		case PLAYER_TURN:
-			if (Gdx.input.justTouched()) {				
+			if (Gdx.input.justTouched()) {
 				Vector2 touchPos = new Vector2();
 				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
 				battlefield.getHand().processJustTouched(touchPos);
-			} if (Gdx.input.isTouched()) {
+			}
+			if (Gdx.input.isTouched()) {
 				Vector2 touchPos = new Vector2();
 				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
 				battlefield.getHand().processTouch(touchPos);
@@ -127,8 +128,8 @@ public class BattlefieldScreen extends ScreenAdapter {
 
 		// TODO Determine how we managed sounds and loaded fonts and music
 		// Setup font
-		font = new BitmapFont(Gdx.files.internal("data/font.fnt"),
-				Gdx.files.internal("data/font.png"), false);
+		// font = new BitmapFont(Gdx.files.internal("data/font.fnt"),
+		// Gdx.files.internal("data/font.png"), false);
 
 		// Setup Music that will play
 		music = Gdx.audio.newMusic(Gdx.files.internal(battlefield
@@ -136,7 +137,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		music.setLooping(true);
 		music.setVolume(0.5f);
 
-		laser = Gdx.audio.newSound(Gdx.files.internal("laser.wav"));
+		// laser = Gdx.audio.newSound(Gdx.files.internal("laser.wav"));
 
 		// Get and load all sounds/graphics objects will use
 		// Classes are responsbile for their sounds, animations,bitmaps
@@ -170,5 +171,6 @@ public class BattlefieldScreen extends ScreenAdapter {
 
 		atlas = packer.generateTextureAtlas(TextureFilter.Linear,
 				TextureFilter.Linear, useMipMaps);
+		assetsLoaded = true;
 	}
 }

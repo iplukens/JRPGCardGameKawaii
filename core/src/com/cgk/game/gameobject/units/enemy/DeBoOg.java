@@ -21,8 +21,8 @@ public class DeBoOg extends Enemy {
 	}
 
 	@Override
-	protected void setUpEventResponses() {
-		super.setUpEventResponses();
+	protected void setupEventResponses() {
+		super.setupEventResponses();
 		addResponse(EventType.PLAY, new SendEventResponse(
 				new AttackAdditiveEvent(50)));
 		addResponse(EventType.ATTACK_PLAYER, new SendEventResponse(

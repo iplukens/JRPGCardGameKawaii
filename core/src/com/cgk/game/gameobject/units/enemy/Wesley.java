@@ -21,8 +21,8 @@ public class Wesley extends Enemy {
 	}
 
 	@Override
-	protected void setUpEventResponses() {
-		super.setUpEventResponses();
+	protected void setupEventResponses() {
+		super.setupEventResponses();
 	}
 
     @Override
