@@ -63,6 +63,7 @@ public abstract class GameObject {
 		try {
 			eventQueue.put(event);
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOGGER.log(Level.WARNING, e.getLocalizedMessage());
 		}
 	}

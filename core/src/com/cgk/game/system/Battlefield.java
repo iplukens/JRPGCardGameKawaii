@@ -15,6 +15,7 @@ public class Battlefield {
 	private List<Hero> heroes;
 	private Deck deck;
 	private Hand hand;
+	private ComboTracker comboTracker;
 	private String musicFileLocation;
 	private GameState gameState;
 
@@ -27,8 +28,9 @@ public class Battlefield {
 	 */
 	public Battlefield(PlayerAssets playerAssets, int levelId) {
 		EventQueue queue = new EventQueue();
-		deck = playerAssets.getDeck(queue);
 		hand = new Hand(queue);
+		deck = playerAssets.getDeck(queue);
+		comboTracker = playerAssets.getComboTracker(queue);
 		LevelAssets levelAssets = new LevelAssets(levelId);
 		enemies = levelAssets.getEnemies(queue, 1);
 		heroes = playerAssets.getHeroes(queue);
@@ -48,6 +50,10 @@ public class Battlefield {
 
 	public List<Hero> getHeroes() {
 		return heroes;
+	}
+
+	public ComboTracker getComboTracker() {
+		return comboTracker;
 	}
 
 	public String getMusicFileLocation() {

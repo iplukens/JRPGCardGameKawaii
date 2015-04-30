@@ -12,13 +12,14 @@ import com.cgk.game.event.DiscardedCardEvent;
 import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.eventresponses.AddCardResponse;
-import com.cgk.game.gameobject.eventresponses.HandDiscardEventResponse;
+import com.cgk.game.gameobject.eventresponses.HandDiscardCardEventResponse;
+import com.cgk.game.gameobject.eventresponses.HandRandomDiscardEventResponse;
+import com.cgk.game.gameobject.eventresponses.RemoveCardFromHandResponse;
 import com.cgk.game.system.EventQueue;
 import com.cgk.game.util.Constants;
 
 public class Hand extends CardLibrary {
 
-	private List<Card> cards = new ArrayList<>();
 	private Card touchedCard;
 	private Rectangle handArea;
 
@@ -31,24 +32,24 @@ public class Hand extends CardLibrary {
 	}
 
 	private void setDefaultCardPositions() {
-		float currentX = handArea.x;
-		for (Card card : cards) {
-			card.setStartX(currentX);
-			currentX += Constants.HAND_AREA_BTWN_CARDS;
-			card.setStartY(handArea.y);
+		for (int i = 0; i < cards.size(); i++) {
+			cards.get(i).setStartX(i * Constants.HAND_AREA_BTWN_CARDS);
+			cards.get(i).setStartY(handArea.y);
 		}
 	}
 
 	public Hand(EventQueue eventQueue, List<Card> cards) {
 		super(eventQueue);
 		this.cards.addAll(cards);
+		handArea = new Rectangle(0, 0, Constants.SCREEN_WIDTH,
+				Constants.HAND_HEIGHT);
+		setDefaultCardPositions();
 	}
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(atlas.findRegion("assets/fullDeck.png"), handArea.x,
-				handArea.y,
-				handArea.width, handArea.height);
+				handArea.y, handArea.width, handArea.height);
 		for (Card card : cards) {
 			card.draw(batcher, atlas);
 		}
@@ -63,15 +64,15 @@ public class Hand extends CardLibrary {
 	public void discard(Card card) {
 		removeCard(card);
 		card.sendDiscardEvents();
-		sendEvent(new DiscardedCardEvent(card));
 		setDefaultCardPositions();
 	}
 
 	/**
 	 * discards a card at random
 	 */
-	public void discard() {
-		discard(getRandomCard());
+	public void discardRandomCard() {
+		Card card = getRandomCard();
+		sendEvent(new DiscardedCardEvent(card));
 	}
 
 	private Card getRandomCard() {
@@ -95,8 +96,11 @@ public class Hand extends CardLibrary {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.DISCARD, new HandDiscardEventResponse());
+		addResponse(EventType.RANDOM_DISCARD, new HandRandomDiscardEventResponse());
+		addResponse(EventType.CARD_DISCARDED,
+				new HandDiscardCardEventResponse());
 		addResponse(EventType.DRAWN_CARD, new AddCardResponse());
+		addResponse(EventType.PLAY, new RemoveCardFromHandResponse());
 	}
 
 	@Override
@@ -126,7 +130,6 @@ public class Hand extends CardLibrary {
 				if (card.getCardArea().contains(touchPos)) {
 					logInfo("touched card " + card.getCardName());
 					touchedCard = card;
-					card.processJustTouched(touchPos);
 					break;
 				}
 			}
@@ -140,10 +143,8 @@ public class Hand extends CardLibrary {
 	}
 
 	private void clearJustTouched() {
-		resetTouches();
 		if (touchedCard != null) {
 			logInfo("clearing just touched");
-			touchedCard.resetTouchStatus();
 			touchedCard = null;
 		}
 	}
@@ -159,8 +160,9 @@ public class Hand extends CardLibrary {
 		return cards.size();
 	}
 
-	public void resetTouches() {
+	public void resetTouches(Vector2 releasePos) {
 		if (touchedCard != null) {
+			touchedCard.processRelease(releasePos);
 			moveCardsBack();
 		}
 	}

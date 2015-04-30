@@ -2,11 +2,11 @@ package com.cgk.game.event.cardevents;
 
 import com.cgk.game.event.EventType;
 
-public class DiscardEvent extends CardEffectEvent {
+public class RandomDiscardEvent extends CardEffectEvent {
 
 	@Override
 	public EventType getType() {
-		return EventType.DISCARD;
+		return EventType.RANDOM_DISCARD;
 	}
 
 	@Override

@@ -18,6 +18,14 @@ public class ComboTracker extends GameObject {
 	private int resourceValue;
 	private AttackType attackType;
 
+	public ComboTracker(EventQueue queue, int currentComboSize,
+			int resourceValue, AttackType attackType) {
+		super(queue);
+		this.currentComboSize = currentComboSize;
+		this.resourceValue = resourceValue;
+		this.attackType = attackType;
+	}
+
 	@Override
 	protected void setupEventResponses() {
 		addResponse(EventType.PLAY, new ComboTrackerPlayResponse());
@@ -54,8 +62,16 @@ public class ComboTracker extends GameObject {
 		resourceValue = cardResourceNumber;
 	}
 
-	public int getComboSize() {
+	public int getSize() {
 		return currentComboSize;
+	}
+
+	public AttackType getAttackType() {
+		return attackType;
+	}
+
+	public int getResourceValue() {
+		return resourceValue;
 	}
 
 	@Override

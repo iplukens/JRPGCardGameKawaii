@@ -1,6 +1,5 @@
 package com.cgk.game.gameobject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -17,7 +16,6 @@ import com.cgk.game.util.Constants;
 
 public class Deck extends CardLibrary {
 
-	private List<Card> cards = new ArrayList<Card>();
 	Asset fullDeck = new Asset("assets/fullDeck.png", Texture.class);
 
 	public Deck(EventQueue eventQueue) {
@@ -47,8 +45,10 @@ public class Deck extends CardLibrary {
 	}
 
 	public void drawCard() {
-		Card card = cards.remove(0);
-		sendEvent(new DrawnCardEvent(card));
+		if (cards.size() > 0) {
+			Card card = cards.remove(0);
+			sendEvent(new DrawnCardEvent(card));
+		}
 	}
 
 	public int getSize() {
@@ -74,10 +74,10 @@ public class Deck extends CardLibrary {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.CARD_DISCARDED, new DrawFromDeckResponse());
 		addResponse(EventType.CARD_DISCARDED, new AddCardResponse());
-		addResponse(EventType.PLAY, new DrawFromDeckResponse());
+		addResponse(EventType.CARD_DISCARDED, new DrawFromDeckResponse());
 		addResponse(EventType.PLAY, new AddCardResponse());
+		addResponse(EventType.PLAY, new DrawFromDeckResponse());
 	}
 
 	@Override

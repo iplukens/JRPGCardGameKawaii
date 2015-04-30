@@ -27,6 +27,6 @@ public class UnitAttack {
 	}
 
 	public enum AttackType {
-		BLUE, PURPLE, YELLOW, RED, GREEN;
+		BLUE, PURPLE, YELLOW, RED, GREEN, GREY;
 	}
 }

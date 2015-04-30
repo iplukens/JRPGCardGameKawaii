@@ -8,6 +8,7 @@ public class AddCardResponse extends EventResponse<CardLibrary, CardEvent> {
 	@Override
 	protected void handleEvent(CardLibrary gameObject, CardEvent event) {
 		gameObject.addCard(event.getCard());
+		gameObject.printInfo("add card");
 	}
 
 }

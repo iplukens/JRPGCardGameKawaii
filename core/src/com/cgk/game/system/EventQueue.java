@@ -3,6 +3,8 @@ package com.cgk.game.system;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
@@ -10,6 +12,7 @@ import com.cgk.game.gameobject.GameObject;
 
 public class EventQueue extends LinkedBlockingDeque<GameEvent> {
 
+	private final Logger LOGGER = Logger.getLogger(EventQueue.class.toString());
 	private static final long serialVersionUID = 1L;
 	private static int MAX_EVENTS_IN_SEQUENCE = 1000;
 	private static int eventsThisSequence = 0;
@@ -29,6 +32,7 @@ public class EventQueue extends LinkedBlockingDeque<GameEvent> {
 
 	@Override
 	public void put(GameEvent e) throws InterruptedException {
+		LOGGER.log(Level.INFO, "Adding event " + e.getType());
 		if (e.hasPriority()) {
 			super.addFirst(e);
 		} else {
@@ -39,6 +43,7 @@ public class EventQueue extends LinkedBlockingDeque<GameEvent> {
 
 	private void evaluateEvent(GameEvent e) {
 		if (peek() == e) {
+			LOGGER.log(Level.INFO, "Evaluating event " + e.getType());
 			eventsThisSequence++;
 			sendToObservers(e);
 			if (!isEmpty()) {

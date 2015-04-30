@@ -7,7 +7,8 @@ public class DrawFromDeckResponse extends EventResponse<Deck, GameEvent> {
 
 	@Override
 	protected void handleEvent(Deck gameObject, GameEvent event) {
-			gameObject.drawCard();
+		gameObject.printInfo("draw from deck");
+		gameObject.drawCard();
 	}
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -24,9 +25,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.opengl.inputprocessor.PlayerTurnInputProcessor;
 import com.cgk.game.system.Asset;
 import com.cgk.game.system.Battlefield;
 import com.cgk.game.util.Constants;
@@ -50,6 +51,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 	private Sound laser;
 
 	public BitmapFont font;
+	private InputProcessor playerTurnProcessor;
 
 	public BattlefieldScreen(CardGameKawaii game, Battlefield battlefield) {
 		this.game = game;
@@ -58,6 +60,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		guiCam.position.set(Constants.SCREEN_WIDTH / 2,
 				Constants.SCREEN_HEIGHT / 2, 0);
 		this.battlefield = battlefield;
+		playerTurnProcessor = new PlayerTurnInputProcessor(battlefield);
 		loadAssets();
 	}
 
@@ -68,18 +71,8 @@ public class BattlefieldScreen extends ScreenAdapter {
 		 */
 		switch (battlefield.getGameState()) {
 		case PLAYER_TURN:
-			if (Gdx.input.justTouched()) {
-				Vector2 touchPos = new Vector2();
-				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-				battlefield.getHand().processJustTouched(touchPos);
-			}
-			if (Gdx.input.isTouched()) {
-				Vector2 touchPos = new Vector2();
-				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-				battlefield.getHand().processTouch(touchPos);
-			}
-			if (!Gdx.input.isTouched()) {
-				battlefield.getHand().resetTouches();
+			if (Gdx.input.getInputProcessor() != playerTurnProcessor) {
+				Gdx.input.setInputProcessor(playerTurnProcessor);
 			}
 			// check input
 			// if yes, process it
@@ -109,8 +102,9 @@ public class BattlefieldScreen extends ScreenAdapter {
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		guiCam.update();
 		game.batcher.setProjectionMatrix(guiCam.combined);
-		game.batcher.enableBlending();
 		game.batcher.begin();
+		game.batcher.enableBlending();
+		// gl.glEnable(GL20.GL_BLEND);
 		battlefield.draw(game.batcher, atlas);
 		game.batcher.end();
 	}

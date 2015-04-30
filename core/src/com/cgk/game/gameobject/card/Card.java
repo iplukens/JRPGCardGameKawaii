@@ -26,7 +26,6 @@ public abstract class Card extends GameObject {
 	private Asset currentGraphic;
 	protected List<GameEvent> cardEvents = new ArrayList<>();
 	private Rectangle cardArea;
-	private Vector2 lastTouchedPos;
 	private int resourceNumber;
 	private AttackType startingCardType;
 	private AttackType endingCardType;
@@ -161,31 +160,27 @@ public abstract class Card extends GameObject {
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(atlas.findRegion(currentGraphic.getFileName()),
-				cardArea.x, cardArea.y, cardArea.width,
-				cardArea.height);
-	}
-
-	public void processJustTouched(Vector2 touchPos) {
-		lastTouchedPos = touchPos;
-	}
-
-	public void resetTouchStatus() {
-		lastTouchedPos = null;
+				cardArea.x, cardArea.y, cardArea.width, cardArea.height);
 	}
 
 	public void processTouch(Vector2 touchPos) {
-		if (touchPos.y > lastTouchedPos.y + Constants.PLAY_CARD_THRESHOLD) {
+		logInfo("new coordinate: (" + touchPos.x + ", " + touchPos.y + ")");
+		cardArea.x = touchPos.x - cardArea.width / 2;
+		cardArea.y = touchPos.y - cardArea.height / 2;
+	}
+
+	public void processRelease(Vector2 touchPos) {
+		touchPos.y = Constants.SCREEN_HEIGHT - touchPos.y;
+		if (touchPos.y > (startY + Constants.DEFAULT_CARD_HEIGHT / 2)
+				+ Constants.PLAY_CARD_THRESHOLD) {
 			logInfo("Playing card");
 			play();
-		} else if (touchPos.y < lastTouchedPos.y
+		} else if (touchPos.y < (startY + Constants.DEFAULT_CARD_HEIGHT / 2)
 				- Constants.PLAY_CARD_THRESHOLD
 				|| touchPos.y < Constants.DISCARD_SCREEN_FLOOR) {
 			logInfo("Discarding card");
 			discard();
 		}
-		logInfo("new coordinate: (" + touchPos.x + ", " + touchPos.y + ")");
-		cardArea.x = touchPos.x - cardArea.width / 2;
-		cardArea.y = touchPos.y - cardArea.height / 2;
 	}
 
 	@Override
