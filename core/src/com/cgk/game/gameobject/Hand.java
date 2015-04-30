@@ -27,8 +27,16 @@ public class Hand extends CardLibrary {
 		cards = new ArrayList<>(Constants.MAX_HAND_SIZE);
 		handArea = new Rectangle(0, 0, Constants.SCREEN_WIDTH,
 				Constants.HAND_HEIGHT);
-		handArea.setCenter(Constants.DEFAULT_CARD_WIDTH / 2,
-				Constants.DEFAULT_CARD_HEIGHT / 2);
+		setDefaultCardPositions();
+	}
+
+	private void setDefaultCardPositions() {
+		float currentX = handArea.x;
+		for (Card card : cards) {
+			card.setStartX(currentX);
+			currentX += Constants.HAND_AREA_BTWN_CARDS;
+			card.setStartY(handArea.y);
+		}
 	}
 
 	public Hand(EventQueue eventQueue, List<Card> cards) {
@@ -38,6 +46,9 @@ public class Hand extends CardLibrary {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
+		batcher.draw(atlas.findRegion("assets/fullDeck.png"), handArea.x,
+				handArea.y,
+				handArea.width, handArea.height);
 		for (Card card : cards) {
 			card.draw(batcher, atlas);
 		}
@@ -53,6 +64,7 @@ public class Hand extends CardLibrary {
 		removeCard(card);
 		card.sendDiscardEvents();
 		sendEvent(new DiscardedCardEvent(card));
+		setDefaultCardPositions();
 	}
 
 	/**
@@ -74,6 +86,7 @@ public class Hand extends CardLibrary {
 
 	public void addCard(Card card) {
 		cards.add(card);
+		setDefaultCardPositions();
 	}
 
 	public List<Card> getCards() {
@@ -103,10 +116,15 @@ public class Hand extends CardLibrary {
 	 * @param touchPos
 	 */
 	public void processJustTouched(Vector2 touchPos) {
+		logInfo("processing just touched: (" + touchPos.x + ", " + touchPos.y
+				+ ")");
+		touchPos = adjustToOpenGLCoords(touchPos);
 		if (handArea.contains(touchPos)) {
+			logInfo("touched in the hand area");
 			clearJustTouched();
 			for (Card card : cards) {
 				if (card.getCardArea().contains(touchPos)) {
+					logInfo("touched card " + card.getCardName());
 					touchedCard = card;
 					card.processJustTouched(touchPos);
 					break;
@@ -115,14 +133,23 @@ public class Hand extends CardLibrary {
 		}
 	}
 
+	private Vector2 adjustToOpenGLCoords(Vector2 touchPos) {
+		touchPos.y = Constants.SCREEN_HEIGHT - touchPos.y;
+		// logInfo("new Y:" + touchPos.y);
+		return touchPos;
+	}
+
 	private void clearJustTouched() {
+		resetTouches();
 		if (touchedCard != null) {
+			logInfo("clearing just touched");
 			touchedCard.resetTouchStatus();
 			touchedCard = null;
 		}
 	}
 
 	public void processTouch(Vector2 touchPos) {
+		touchPos = adjustToOpenGLCoords(touchPos);
 		if (touchedCard != null) {
 			touchedCard.processTouch(touchPos);
 		}
@@ -130,6 +157,18 @@ public class Hand extends CardLibrary {
 
 	public int getSize() {
 		return cards.size();
+	}
+
+	public void resetTouches() {
+		if (touchedCard != null) {
+			moveCardsBack();
+		}
+	}
+
+	private void moveCardsBack() {
+		for (Card card : cards) {
+			card.moveBack();
+		}
 	}
 
 }

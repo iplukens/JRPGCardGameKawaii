@@ -53,7 +53,6 @@ public class BattlefieldScreen extends ScreenAdapter {
 
 	public BattlefieldScreen(CardGameKawaii game, Battlefield battlefield) {
 		this.game = game;
-
 		guiCam = new OrthographicCamera(Constants.SCREEN_WIDTH,
 				Constants.SCREEN_HEIGHT);
 		guiCam.position.set(Constants.SCREEN_WIDTH / 2,
@@ -78,6 +77,9 @@ public class BattlefieldScreen extends ScreenAdapter {
 				Vector2 touchPos = new Vector2();
 				touchPos.set(Gdx.input.getX(), Gdx.input.getY());
 				battlefield.getHand().processTouch(touchPos);
+			}
+			if (!Gdx.input.isTouched()) {
+				battlefield.getHand().resetTouches();
 			}
 			// check input
 			// if yes, process it
@@ -107,7 +109,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		guiCam.update();
 		game.batcher.setProjectionMatrix(guiCam.combined);
-
+		game.batcher.enableBlending();
 		game.batcher.begin();
 		battlefield.draw(game.batcher, atlas);
 		game.batcher.end();
@@ -165,7 +167,11 @@ public class BattlefieldScreen extends ScreenAdapter {
 			for (Asset asset : assets) {
 				Pixmap pixmap = new Pixmap(Gdx.files.internal(asset
 						.getFileName()));
-				packer.pack(asset.getFileName(), pixmap);
+				try {
+					packer.pack(asset.getFileName(), pixmap);
+				} catch (RuntimeException e) {
+
+				}
 				pixmap.dispose();
 			}
 		}

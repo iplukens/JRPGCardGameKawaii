@@ -2,8 +2,6 @@ package game.gameobject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.Hand;
@@ -15,7 +13,7 @@ public class GameObjectFactory {
 
 	private EventQueue eventQueue;
 	private List<Card> cardsList;
-	private Queue<Card> cardsQueue;
+	private List<Card> cardsQueue;
 	private Card genericCard;
 	private boolean initialized = false;
 
@@ -28,7 +26,7 @@ public class GameObjectFactory {
 			genericCard = new FuelTheFire(eventQueue);
 			cardsList = new ArrayList<Card>();
 			cardsList.add(genericCard);
-			cardsQueue = new PriorityQueue<Card>();
+			cardsQueue = new ArrayList<Card>();
 			cardsQueue.add(genericCard);
 			initialized = true;
 		}

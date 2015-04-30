@@ -143,4 +143,11 @@ public abstract class GameObject {
 	protected void unregister() {
 		eventQueue.unregisterGameObject(this);
 	}
+
+	public void logInfo(String info) {
+		StackTraceElement[] stackTraceElements = Thread.currentThread()
+				.getStackTrace();
+		String stackInfo = "" + stackTraceElements[2];
+		System.out.println(stackInfo + " INFO: " + info);
+	}
 }

@@ -24,6 +24,7 @@ public class PlayerAssets {
 		// TODO Auto-generated method stub
 		Deck deck = new Deck(queue);
 		deck.addCard(new FuelTheFire(queue));
+		deck.addCard(new FuelTheFire(queue));
 		return deck;
 	}
 
@@ -46,7 +47,7 @@ public class PlayerAssets {
 
 	public int getMaxHandSize() {
 		// TODO Auto-generated method stub
-		return 1;
+		return 2;
 	}
 
 }

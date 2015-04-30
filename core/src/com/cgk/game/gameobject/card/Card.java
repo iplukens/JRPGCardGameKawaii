@@ -33,6 +33,8 @@ public abstract class Card extends GameObject {
 	protected List<CardEffectEvent> playEvents = new ArrayList<>();
 	protected List<GameEvent> discardEvents = new ArrayList<>();
 	protected boolean alive = true;
+	private float startX;
+	private float startY;
 
 	protected Card(EventQueue eventQueue, String cardName, String cardText) {
 		super(eventQueue);
@@ -40,8 +42,6 @@ public abstract class Card extends GameObject {
 		this.cardText = cardText;
 		cardArea = new Rectangle(0, 0, Constants.DEFAULT_CARD_WIDTH,
 				Constants.DEFAULT_CARD_HEIGHT);
-		cardArea.setCenter(Constants.DEFAULT_CARD_WIDTH / 2,
-				Constants.DEFAULT_CARD_HEIGHT / 2);
 		setPlayEvents();
 		setDiscardEvents();
 	}
@@ -127,7 +127,6 @@ public abstract class Card extends GameObject {
 	}
 
 	/**
-	 * <<<<<<< HEAD
 	 * 
 	 * @Return cardGraphic get the graphical representation of the card. OMG
 	 */
@@ -161,8 +160,8 @@ public abstract class Card extends GameObject {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion(currentGraphic.getFileName())
-				.getTexture(), cardArea.x, cardArea.y, cardArea.width,
+		batcher.draw(atlas.findRegion(currentGraphic.getFileName()),
+				cardArea.x, cardArea.y, cardArea.width,
 				cardArea.height);
 	}
 
@@ -176,12 +175,17 @@ public abstract class Card extends GameObject {
 
 	public void processTouch(Vector2 touchPos) {
 		if (touchPos.y > lastTouchedPos.y + Constants.PLAY_CARD_THRESHOLD) {
+			logInfo("Playing card");
 			play();
 		} else if (touchPos.y < lastTouchedPos.y
 				- Constants.PLAY_CARD_THRESHOLD
 				|| touchPos.y < Constants.DISCARD_SCREEN_FLOOR) {
+			logInfo("Discarding card");
 			discard();
 		}
+		logInfo("new coordinate: (" + touchPos.x + ", " + touchPos.y + ")");
+		cardArea.x = touchPos.x - cardArea.width / 2;
+		cardArea.y = touchPos.y - cardArea.height / 2;
 	}
 
 	@Override
@@ -207,6 +211,21 @@ public abstract class Card extends GameObject {
 
 	public int getResourceNumber() {
 		return resourceNumber;
+	}
+
+	public void setStartX(float newX) {
+		startX = newX;
+		cardArea.x = startX;
+	}
+
+	public void setStartY(float newY) {
+		startY = newY;
+		cardArea.y = startY;
+	}
+
+	public void moveBack() {
+		cardArea.x = startX;
+		cardArea.y = startY;
 	}
 
 }

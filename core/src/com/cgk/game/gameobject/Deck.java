@@ -1,7 +1,7 @@
 package com.cgk.game.gameobject;
 
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,7 +17,7 @@ import com.cgk.game.util.Constants;
 
 public class Deck extends CardLibrary {
 
-	private Queue<Card> cards = new PriorityQueue<Card>();
+	private List<Card> cards = new ArrayList<Card>();
 	Asset fullDeck = new Asset("assets/fullDeck.png", Texture.class);
 
 	public Deck(EventQueue eventQueue) {
@@ -25,15 +25,15 @@ public class Deck extends CardLibrary {
 		setupAssets();
 	}
 
-	public Queue<Card> getCards() {
+	public List<Card> getCards() {
 		return cards;
 	}
 
-	public void setCards(PriorityQueue<Card> cards) {
+	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
 
-	public Deck(EventQueue eventQueue, Queue<Card> cards) {
+	public Deck(EventQueue eventQueue, List<Card> cards) {
 		super(eventQueue);
 		this.cards.addAll(cards);
 	}
@@ -47,7 +47,7 @@ public class Deck extends CardLibrary {
 	}
 
 	public void drawCard() {
-		Card card = cards.remove();
+		Card card = cards.remove(0);
 		sendEvent(new DrawnCardEvent(card));
 	}
 
@@ -57,7 +57,7 @@ public class Deck extends CardLibrary {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion(getDeckState()).getTexture(),
+		batcher.draw(atlas.findRegion(getDeckState()),
 				Constants.DECK_X_POSITION, Constants.DECK_Y_POSITION,
 				Constants.DECK_WIDTH, Constants.DECK_HEIGHT);
 	}
