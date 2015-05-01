@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.event.EventType;
@@ -24,9 +27,9 @@ public abstract class GameObject {
 	@Autowired
 	private EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
-	protected List<Asset> textureAssets = new ArrayList<>();
-	protected List<Asset> musicAssets = new ArrayList<>();
-	protected List<Asset> soundAssets = new ArrayList<>();
+	protected List<Asset<Texture>> textureAssets = new ArrayList<>();
+	protected List<Asset<Music>> musicAssets = new ArrayList<>();
+	protected List<Asset<Sound>> soundAssets = new ArrayList<>();
 	@Autowired
 	AssetManager assetManager;
 
@@ -41,6 +44,7 @@ public abstract class GameObject {
 		eventQueue.registerGameObject(this);
 		eventResponses = new HashMap<>();
 		setupEventResponses();
+		setupAssets();
 	}
 
 	protected abstract void setupEventResponses();
@@ -115,8 +119,8 @@ public abstract class GameObject {
 		return eventResponses;
 	}
 
-	public List<Asset> getAssets() {
-		List<Asset> assets = new ArrayList<>();
+	public List<Asset<?>> getAllAssets() {
+		List<Asset<?>> assets = new ArrayList<>();
 		assets.addAll(textureAssets);
 		assets.addAll(musicAssets);
 		assets.addAll(soundAssets);
@@ -129,15 +133,15 @@ public abstract class GameObject {
 	 */
 	protected abstract void setupAssets();
 
-	public List<Asset> getTextureAssets() {
+	public List<Asset<Texture>> getTextureAssets() {
 		return textureAssets;
 	}
 
-	public List<Asset> getSoundAssets() {
+	public List<Asset<Sound>> getSoundAssets() {
 		return soundAssets;
 	}
 
-	public List<Asset> getMusicAssets() {
+	public List<Asset<Music>> getMusicAssets() {
 		return musicAssets;
 	}
 

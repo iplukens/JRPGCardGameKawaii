@@ -44,4 +44,5 @@ public abstract class Enemy extends UnitObject {
 		super.setupEventResponses();
 		addResponse(EventType.ATTACK_ENEMY, new ProcessAttackResponse());
 	}
+
 }

@@ -73,6 +73,7 @@ public class Battlefield {
 		for (Hero hero : heroes) {
 			hero.draw(batcher, atlas);
 		}
+		comboTracker.draw(batcher, atlas);
 	}
 
 	public GameState getGameState() {

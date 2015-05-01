@@ -16,11 +16,11 @@ import com.cgk.game.util.Constants;
 
 public class Deck extends CardLibrary {
 
-	Asset fullDeck = new Asset("assets/fullDeck.png", Texture.class);
+	private static Asset<Texture> fullDeck = new Asset<>("assets/fullDeck.png",
+			Texture.class);
 
 	public Deck(EventQueue eventQueue) {
 		super(eventQueue);
-		setupAssets();
 	}
 
 	public List<Card> getCards() {
@@ -57,14 +57,14 @@ public class Deck extends CardLibrary {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion(getDeckState()),
+		batcher.draw(getDeckState().getAssetFromAtlas(atlas),
 				Constants.DECK_X_POSITION, Constants.DECK_Y_POSITION,
 				Constants.DECK_WIDTH, Constants.DECK_HEIGHT);
 	}
 
 	// Look at this getting all those states.
-	private String getDeckState() {
-		return fullDeck.getFileName();
+	private Asset<Texture> getDeckState() {
+		return fullDeck;
 	}
 
 	@Override

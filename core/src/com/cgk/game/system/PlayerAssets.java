@@ -2,8 +2,10 @@ package com.cgk.game.system;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.cgk.game.gameobject.Deck;
+import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.card.FuelTheFire;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.hero.Hero;
@@ -14,6 +16,8 @@ import com.cgk.game.gameobject.units.hero.Hero;
  *
  */
 public class PlayerAssets {
+
+	private static final Random random = new Random(System.currentTimeMillis());
 
 	/**
 	 * gets the player's deck
@@ -26,7 +30,26 @@ public class PlayerAssets {
 		Deck deck = new Deck(queue);
 		deck.addCard(new FuelTheFire(queue));
 		deck.addCard(new FuelTheFire(queue));
+		paintDeck(deck);
 		return deck;
+	}
+
+	private void paintDeck(Deck deck) {
+		for (Card card : deck.getCards()) {
+			card.setStartingCardType(getRandomAttackType());
+			card.setEndingCardType(getRandomAttackType());
+		}
+	}
+
+	/**
+	 * TODO: make this function base itself on probabilities of colors
+	 * 
+	 * @return
+	 */
+	private AttackType getRandomAttackType() {
+		List<AttackType> possibleValues = AttackType.getTypes();
+		int chosen = random.nextInt(possibleValues.size());
+		return possibleValues.get(chosen);
 	}
 
 	/**

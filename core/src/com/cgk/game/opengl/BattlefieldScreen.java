@@ -6,7 +6,10 @@
 package com.cgk.game.opengl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,12 +21,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
@@ -38,6 +39,7 @@ import com.cgk.game.util.Constants;
  */
 public class BattlefieldScreen extends ScreenAdapter {
 
+	final Logger LOGGER = Logger.getLogger(BattlefieldScreen.class.toString());
 	CardGameKawaii game;
 	OrthographicCamera guiCam;
 	ArrayList<Rectangle> cardBounds;
@@ -103,8 +105,9 @@ public class BattlefieldScreen extends ScreenAdapter {
 		guiCam.update();
 		game.batcher.setProjectionMatrix(guiCam.combined);
 		game.batcher.begin();
-		game.batcher.enableBlending();
-		// gl.glEnable(GL20.GL_BLEND);
+		// game.batcher.enableBlending();
+		gl.glEnable(GL20.GL_BLEND);
+		gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		battlefield.draw(game.batcher, atlas);
 		game.batcher.end();
 	}
@@ -141,37 +144,30 @@ public class BattlefieldScreen extends ScreenAdapter {
 		objectsToLoad.add(battlefield.getDeck());
 		objectsToLoad.addAll(battlefield.getEnemies());
 		objectsToLoad.addAll(battlefield.getDeck().getCards());
+		objectsToLoad.add(battlefield.getHand());
 		objectsToLoad.addAll(battlefield.getHand().getCards());
 		objectsToLoad.addAll(battlefield.getHeroes());
-
-		int PADDING = 2;
-		boolean borderDuplication = true;
-		boolean useMipMaps = false;
-		PixmapPacker packer = new PixmapPacker(
-				Constants.PIXELPACKER_PAGE_WIDTH,
-				Constants.PIXELPACKER_PAGE_HEIGHT, Format.RGB565, PADDING,
-				borderDuplication);
+		objectsToLoad.add(battlefield.getComboTracker());
 
 		// TODO figure out what to do here
 		// I want each object to give me its textures
 		// then we allocate 4MB to a texture sheet as a page
 		// this can be referenced from atlas after that.
+		HashSet<String> loadedFiles = new HashSet<>();
+		atlas = new TextureAtlas();
 		for (GameObject object : objectsToLoad) {
-			List<Asset> assets = object.getTextureAssets();
-			for (Asset asset : assets) {
-				Pixmap pixmap = new Pixmap(Gdx.files.internal(asset
-						.getFileName()));
-				try {
-					packer.pack(asset.getFileName(), pixmap);
-				} catch (RuntimeException e) {
-
+			List<Asset<Texture>> assets = object.getTextureAssets();
+			for (Asset<Texture> asset : assets) {
+				if (loadedFiles.add(asset.getFileName())) {
+					LOGGER.log(Level.INFO,
+							"Loading asset " + asset.getFileName());
+					atlas.addRegion(
+							asset.getFileName(),
+							new TextureRegion(new Texture(Gdx.files
+									.internal(asset.getFileName()))));
 				}
-				pixmap.dispose();
 			}
 		}
-
-		atlas = packer.generateTextureAtlas(TextureFilter.Linear,
-				TextureFilter.Linear, useMipMaps);
 		assetsLoaded = true;
 	}
 }

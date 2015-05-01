@@ -22,8 +22,8 @@ public abstract class Card extends GameObject {
 
 	private String cardName;
 	private String cardText;
-	protected List<Asset> cardAssets = new ArrayList<>();
-	private Asset currentGraphic;
+	protected List<Asset<?>> cardAssets = new ArrayList<>();
+	private Asset<Texture> currentGraphic;
 	protected List<GameEvent> cardEvents = new ArrayList<>();
 	private Rectangle cardArea;
 	private int resourceNumber;
@@ -35,7 +35,8 @@ public abstract class Card extends GameObject {
 	private float startX;
 	private float startY;
 
-	protected Card(EventQueue eventQueue, String cardName, String cardText) {
+	protected Card(EventQueue eventQueue, String cardName, String cardText,
+			Asset<Texture> cardGraphic) {
 		super(eventQueue);
 		this.cardName = cardName;
 		this.cardText = cardText;
@@ -43,6 +44,9 @@ public abstract class Card extends GameObject {
 				Constants.DEFAULT_CARD_HEIGHT);
 		setPlayEvents();
 		setDiscardEvents();
+		this.currentGraphic = cardGraphic;
+		startingCardType = AttackType.GREY;
+		endingCardType = AttackType.GREY;
 	}
 
 	/**
@@ -133,26 +137,6 @@ public abstract class Card extends GameObject {
 		return cardArea;
 	}
 
-	@Override
-	protected void setupAssets() {
-		for (Asset asset : cardAssets) {
-			if (asset.getAssetClass().equals(Texture.class)) {
-				textureAssets.add(asset);
-			} else {
-				soundAssets.add(asset);
-			}
-		}
-
-		if (!textureAssets.isEmpty()) {
-			currentGraphic = textureAssets.get(0);
-		}
-	}
-
-	protected void setupAssets(List<Asset> assets) {
-		cardAssets = assets;
-		setupAssets();
-	}
-
 	public void discard() {
 		sendEvent(new DiscardedCardEvent(this));
 	}
@@ -206,6 +190,10 @@ public abstract class Card extends GameObject {
 
 	public int getResourceNumber() {
 		return resourceNumber;
+	}
+
+	public void setResourceNumber(int resourceNumber) {
+		this.resourceNumber = resourceNumber;
 	}
 
 	public void setStartX(float newX) {

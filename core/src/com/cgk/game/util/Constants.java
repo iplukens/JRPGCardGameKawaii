@@ -3,6 +3,7 @@
  */
 package com.cgk.game.util;
 
+
 /**
  *
  * @author cgmcandrews
@@ -34,13 +35,23 @@ public class Constants {
 
 	public static final float DISCARD_SCREEN_FLOOR = 50;
 
+	public static float COMBO_AREA_BETWEEN = 20;
+
+	public static float COMBO_WIDTH = 20;
+	public static float COMBO_HEIGHT = 20;
+	public static float CONNECTOR_WIDTH = 20;
+	public static float COMBO_Y = (SCREEN_HEIGHT / 20);
 
 
 	public static void initialize(float height, float width) {
 		SCREEN_HEIGHT = height;
 		SCREEN_WIDTH = width;
 		HAND_HEIGHT = SCREEN_HEIGHT / 2;
-		DEFAULT_CARD_HEIGHT = HAND_HEIGHT - (SCREEN_HEIGHT / 20);
+		COMBO_HEIGHT = (SCREEN_HEIGHT / 20);
+		COMBO_WIDTH = COMBO_HEIGHT;
+		COMBO_AREA_BETWEEN = COMBO_WIDTH + CONNECTOR_WIDTH;
+		DEFAULT_CARD_HEIGHT = HAND_HEIGHT - COMBO_HEIGHT;
+		COMBO_Y = HAND_HEIGHT - COMBO_HEIGHT;
 		DEFAULT_CARD_WIDTH = DEFAULT_CARD_HEIGHT;
 		HAND_AREA_BTWN_CARDS = SCREEN_WIDTH / MAX_HAND_SIZE;
 	}

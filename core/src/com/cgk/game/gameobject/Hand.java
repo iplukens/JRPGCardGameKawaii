@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,6 +16,7 @@ import com.cgk.game.gameobject.eventresponses.AddCardResponse;
 import com.cgk.game.gameobject.eventresponses.HandDiscardCardEventResponse;
 import com.cgk.game.gameobject.eventresponses.HandRandomDiscardEventResponse;
 import com.cgk.game.gameobject.eventresponses.RemoveCardFromHandResponse;
+import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
 import com.cgk.game.util.Constants;
 
@@ -22,6 +24,8 @@ public class Hand extends CardLibrary {
 
 	private Card touchedCard;
 	private Rectangle handArea;
+	private static Asset<Texture> backDropAsset = new Asset<>(
+			"assets/handArea.png", Texture.class);
 
 	public Hand(EventQueue eventQueue) {
 		super(eventQueue);
@@ -48,7 +52,7 @@ public class Hand extends CardLibrary {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion("assets/fullDeck.png"), handArea.x,
+		batcher.draw(backDropAsset.getAssetFromAtlas(atlas), handArea.x,
 				handArea.y, handArea.width, handArea.height);
 		for (Card card : cards) {
 			card.draw(batcher, atlas);
@@ -96,7 +100,8 @@ public class Hand extends CardLibrary {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.RANDOM_DISCARD, new HandRandomDiscardEventResponse());
+		addResponse(EventType.RANDOM_DISCARD,
+				new HandRandomDiscardEventResponse());
 		addResponse(EventType.CARD_DISCARDED,
 				new HandDiscardCardEventResponse());
 		addResponse(EventType.DRAWN_CARD, new AddCardResponse());
@@ -110,8 +115,7 @@ public class Hand extends CardLibrary {
 
 	@Override
 	protected void setupAssets() {
-		throw new UnsupportedOperationException("Not supported yet.");
-		// TODO, change body of generated methods, choose tools/templates
+		textureAssets.add(backDropAsset);
 	}
 
 	/**
@@ -126,10 +130,10 @@ public class Hand extends CardLibrary {
 		if (handArea.contains(touchPos)) {
 			logInfo("touched in the hand area");
 			clearJustTouched();
-			for (Card card : cards) {
-				if (card.getCardArea().contains(touchPos)) {
-					logInfo("touched card " + card.getCardName());
-					touchedCard = card;
+			for (int i = cards.size() - 1; i >= 0; i--) {
+				if (cards.get(i).getCardArea().contains(touchPos)) {
+					logInfo("touched card " + cards.get(i).getCardName());
+					touchedCard = cards.get(i);
 					break;
 				}
 			}
@@ -163,6 +167,7 @@ public class Hand extends CardLibrary {
 	public void resetTouches(Vector2 releasePos) {
 		if (touchedCard != null) {
 			touchedCard.processRelease(releasePos);
+			touchedCard = null;
 			moveCardsBack();
 		}
 	}

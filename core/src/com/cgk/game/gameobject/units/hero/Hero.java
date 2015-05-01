@@ -15,8 +15,8 @@ import com.cgk.game.util.Constants;
 
 public class Hero extends UnitObject {
 
-	Asset heroTexture = new Asset("hero.png", Texture.class);
-	Asset currentGraphic;
+	Asset<Texture> heroTexture = new Asset<>("hero.png", Texture.class);
+	Asset<Texture> currentGraphic;
 	Rectangle heroGraphic = new Rectangle(0, 0, Constants.DEFAULT_HERO_HEIGHT,
 			Constants.DEFAULT_HERO_WIDTH);
 
