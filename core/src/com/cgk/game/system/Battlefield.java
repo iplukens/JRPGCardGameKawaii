@@ -18,6 +18,7 @@ public class Battlefield {
 	private ComboTracker comboTracker;
 	private String musicFileLocation;
 	private GameState gameState;
+	private PlayerTurnTimer timer;
 
 	// TODO: support multiple levels
 
@@ -28,6 +29,7 @@ public class Battlefield {
 	 */
 	public Battlefield(PlayerAssets playerAssets, int levelId) {
 		EventQueue queue = new EventQueue();
+		timer = playerAssets.getTimer(queue);
 		hand = new Hand(queue);
 		deck = playerAssets.getDeck(queue);
 		comboTracker = playerAssets.getComboTracker(queue);
@@ -38,6 +40,7 @@ public class Battlefield {
 		for (int i = 0; i < playerAssets.getMaxHandSize(); i++) {
 			deck.drawCard();
 		}
+		timer.startTimer();
 	}
 
 	public Deck getDeck() {
@@ -65,8 +68,8 @@ public class Battlefield {
 	}
 
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
+		timer.draw(batcher, atlas);
 		deck.draw(batcher, atlas);
-		hand.draw(batcher, atlas);
 		for (Enemy enemy : enemies) {
 			enemy.draw(batcher, atlas);
 		}
@@ -74,6 +77,7 @@ public class Battlefield {
 			hero.draw(batcher, atlas);
 		}
 		comboTracker.draw(batcher, atlas);
+		hand.draw(batcher, atlas);
 	}
 
 	public GameState getGameState() {
@@ -86,5 +90,13 @@ public class Battlefield {
 
 	public Hand getHand() {
 		return hand;
+	}
+
+	public void updateTimer(float delta) {
+		timer.update(delta);
+	}
+
+	public boolean turnOver() {
+		return timer.turnOver();
 	}
 }

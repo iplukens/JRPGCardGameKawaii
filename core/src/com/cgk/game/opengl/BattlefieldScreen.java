@@ -66,7 +66,12 @@ public class BattlefieldScreen extends ScreenAdapter {
 		loadAssets();
 	}
 
-	public void update(float delta) {
+	/**
+	 * 
+	 * @param timedelta
+	 *            time in seconds since the last render
+	 */
+	public void update(float timedelta) {
 		/**
 		 * Game states - YOUR_TURN - look for input CONSEQUENCES OF TURN - your
 		 * attack - enemy attack - familiar attack
@@ -76,8 +81,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 			if (Gdx.input.getInputProcessor() != playerTurnProcessor) {
 				Gdx.input.setInputProcessor(playerTurnProcessor);
 			}
-			// check input
-			// if yes, process it
+			battlefield.updateTimer(timedelta);
 			break;
 		case ENEMY_TURN:
 			break;

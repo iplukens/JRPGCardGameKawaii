@@ -16,7 +16,6 @@ public class CardGameKawaii extends Game {
 		batcher = new SpriteBatch();
 		float height = Gdx.graphics.getHeight();
 		float width = Gdx.graphics.getWidth();
-		System.out.println(width + ", " + height);
 		Constants.initialize(height, width);
 		// displayLoadScreen
 		PlayerAssets assets = PlayerAssets.getAssets();

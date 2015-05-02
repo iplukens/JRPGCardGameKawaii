@@ -3,6 +3,7 @@ package com.cgk.game.gameobject.card;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,6 +17,7 @@ import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 import com.cgk.game.system.EventQueue;
+import com.cgk.game.util.CardConstants;
 import com.cgk.game.util.Constants;
 
 public abstract class Card extends GameObject {
@@ -34,14 +36,20 @@ public abstract class Card extends GameObject {
 	protected boolean alive = true;
 	private float startX;
 	private float startY;
+	private static Asset<Texture> cardBackground = new Asset<Texture>(
+			"assets/cardBackground.png", Texture.class);
+	private static Asset<Texture> insideCardBackground = new Asset<Texture>(
+			"assets/insideCardBorder.png", Texture.class);
 
 	protected Card(EventQueue eventQueue, String cardName, String cardText,
 			Asset<Texture> cardGraphic) {
 		super(eventQueue);
+		textureAssets.add(cardBackground);
+		textureAssets.add(insideCardBackground);
 		this.cardName = cardName;
 		this.cardText = cardText;
-		cardArea = new Rectangle(0, 0, Constants.DEFAULT_CARD_WIDTH,
-				Constants.DEFAULT_CARD_HEIGHT);
+		cardArea = new Rectangle(0, 0, CardConstants.WIDTH,
+				CardConstants.HEIGHT);
 		setPlayEvents();
 		setDiscardEvents();
 		this.currentGraphic = cardGraphic;
@@ -143,8 +151,49 @@ public abstract class Card extends GameObject {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion(currentGraphic.getFileName()),
-				cardArea.x, cardArea.y, cardArea.width, cardArea.height);
+		drawBackground(batcher, atlas);
+		drawArt(batcher, atlas);
+		drawResourceIndicator(batcher);
+		drawEffectText(batcher);
+	}
+
+	private void drawArt(SpriteBatch batcher, TextureAtlas atlas) {
+		batcher.draw(currentGraphic.getAssetFromAtlas(atlas), cardArea.x
+				+ CardConstants.ART_MARGIN, cardArea.y + CardConstants.HEIGHT
+				- CardConstants.ART_HEIGHT - CardConstants.ART_MARGIN,
+				CardConstants.ART_WIDTH, CardConstants.ART_HEIGHT);
+	}
+
+	private void drawBackground(SpriteBatch batcher, TextureAtlas atlas) {
+		batcher.draw(cardBackground.getAssetFromAtlas(atlas), cardArea.x,
+				cardArea.y, cardArea.width, cardArea.height);
+		batcher.setColor(startingCardType.getColorTint());
+		batcher.draw(insideCardBackground.getAssetFromAtlas(atlas), cardArea.x
+				+ CardConstants.BORDER_SIDE, cardArea.y
+				+ CardConstants.BORDER_BOTTOM,
+				CardConstants.BACKGROUND_WIDTH / 2,
+				CardConstants.BACKGROUND_HEIGHT);
+		batcher.setColor(endingCardType.getColorTint());
+		batcher.draw(insideCardBackground.getAssetFromAtlas(atlas), cardArea.x
+				+ CardConstants.BACKGROUND_WIDTH / 2
+				+ CardConstants.BORDER_SIDE, cardArea.y
+				+ CardConstants.BORDER_BOTTOM,
+				CardConstants.BACKGROUND_WIDTH / 2,
+				CardConstants.BACKGROUND_HEIGHT);
+		batcher.setColor(Color.WHITE);
+	}
+
+	private void drawEffectText(SpriteBatch batcher) {
+		int line = 0;
+		for (CardEffectEvent playEvent : playEvents) {
+			line += playEvent.drawPlayInfo(batcher, line, cardArea);
+		}
+	}
+
+	private void drawResourceIndicator(SpriteBatch batcher) {
+		Constants.COMBO_BUBBLE_FONT.draw(batcher, "" + resourceNumber,
+				cardArea.x + CardConstants.BORDER_SIDE, cardArea.y
+						+ CardConstants.HEIGHT - CardConstants.BORDER_SIDE);
 	}
 
 	public void processTouch(Vector2 touchPos) {
@@ -155,11 +204,11 @@ public abstract class Card extends GameObject {
 
 	public void processRelease(Vector2 touchPos) {
 		touchPos.y = Constants.SCREEN_HEIGHT - touchPos.y;
-		if (touchPos.y > (startY + Constants.DEFAULT_CARD_HEIGHT / 2)
+		if (touchPos.y > (startY + CardConstants.HEIGHT / 2)
 				+ Constants.PLAY_CARD_THRESHOLD) {
 			logInfo("Playing card");
 			play();
-		} else if (touchPos.y < (startY + Constants.DEFAULT_CARD_HEIGHT / 2)
+		} else if (touchPos.y < (startY + CardConstants.HEIGHT / 2)
 				- Constants.PLAY_CARD_THRESHOLD
 				|| touchPos.y < Constants.DISCARD_SCREEN_FLOOR) {
 			logInfo("Discarding card");

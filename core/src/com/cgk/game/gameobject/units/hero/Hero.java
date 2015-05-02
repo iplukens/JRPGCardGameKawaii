@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.event.AttackEnemyEvent;
 import com.cgk.game.event.DefeatEvent;
 import com.cgk.game.event.EventType;
+import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
 import com.cgk.game.system.Asset;
@@ -15,21 +16,25 @@ import com.cgk.game.util.Constants;
 
 public class Hero extends UnitObject {
 
-	Asset<Texture> heroTexture = new Asset<>("hero.png", Texture.class);
-	Asset<Texture> currentGraphic;
-	Rectangle heroGraphic = new Rectangle(0, 0, Constants.DEFAULT_HERO_HEIGHT,
-			Constants.DEFAULT_HERO_WIDTH);
+	private static Asset<Texture> heroTexture = new Asset<>("assets/hero.png",
+			Texture.class);
+	private Asset<Texture> currentGraphic;
 
-	public Hero(EventQueue eventQueue) {
+	public Hero(EventQueue eventQueue, int maxHealth, AttackType attackType) {
 		super(eventQueue);
-		// TODO Auto-generated constructor stub
+		this.maxHealth = maxHealth;
+		this.attackType = attackType;
+		this.currentHealth = maxHealth;
+		unitBox = new Rectangle(Constants.HERO_STARTING_X,
+				Constants.HERO_STARTING_Y, Constants.DEFAULT_HERO_WIDTH,
+				Constants.DEFAULT_HERO_HEIGHT);
 	}
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(atlas.findRegion(currentGraphic.getFileName())
-				.getTexture(), heroGraphic.x, heroGraphic.y, heroGraphic.width,
-				heroGraphic.height);
+		batcher.draw(currentGraphic.getAssetFromAtlas(atlas), unitBox.x,
+				unitBox.y, unitBox.width, unitBox.height);
+		drawHealthBar(batcher, atlas, unitBox);
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public class Hero extends UnitObject {
 
 	@Override
 	public void sendAttackEvent() {
-		sendEvent(new AttackEnemyEvent(getAttack()));
+		sendEvent(new AttackEnemyEvent(this));
 	}
 
 	@Override

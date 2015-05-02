@@ -1,5 +1,7 @@
 package com.cgk.game.event.cardevents;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.event.EventType;
 
 public class AttackAdditiveEvent extends ValueEvent {
@@ -13,9 +15,9 @@ public class AttackAdditiveEvent extends ValueEvent {
 	}
 
 	@Override
-	public void drawPlayInfo(int start) {
-		// TODO Auto-generated method stub
-
+	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
+		drawLine(batcher, "Attack + " + value, line, cardArea);
+		return 1;
 	}
 
 }

@@ -25,7 +25,7 @@ public abstract class Enemy extends UnitObject {
 	}
 
 	public void sendAttackEvent() {
-		sendEvent(new AttackPlayerEvent(getAttack()));
+		sendEvent(new AttackPlayerEvent(this));
 	}
 
 	protected void sendOnDeathEvents() {
@@ -44,5 +44,6 @@ public abstract class Enemy extends UnitObject {
 		super.setupEventResponses();
 		addResponse(EventType.ATTACK_ENEMY, new ProcessAttackResponse());
 	}
+
 
 }

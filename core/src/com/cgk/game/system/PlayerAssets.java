@@ -61,7 +61,9 @@ public class PlayerAssets {
 	 */
 	public List<Hero> getHeroes(EventQueue queue) {
 		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		List<Hero> heroes = new ArrayList<>();
+		heroes.add(new Hero(queue, 100, AttackType.BLUE));
+		return heroes;
 	}
 
 	public static PlayerAssets getAssets() {
@@ -77,6 +79,11 @@ public class PlayerAssets {
 	public ComboTracker getComboTracker(EventQueue queue) {
 		// TODO Auto-generated method stub
 		return new ComboTracker(queue, 0, 0, AttackType.GREY);
+	}
+
+	public PlayerTurnTimer getTimer(EventQueue queue) {
+		// TODO Auto-generated method stub
+		return new PlayerTurnTimer(queue, 25, 10, 5);
 	}
 
 }

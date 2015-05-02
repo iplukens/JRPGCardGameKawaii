@@ -1,26 +1,16 @@
 package com.cgk.game.event;
 
-import com.cgk.game.gameobject.units.UnitAttack;
+import com.cgk.game.gameobject.units.enemy.Enemy;
 
 public class AttackPlayerEvent extends AttackEvent {
 
-	private UnitAttack attack;
-
-	public AttackPlayerEvent(UnitAttack attack) {
-		super(attack);
+	public AttackPlayerEvent(Enemy enemy) {
+		super(enemy);
 	}
 
 	@Override
 	public EventType getType() {
 		return EventType.ATTACK_PLAYER;
-	}
-
-	public UnitAttack getAttack() {
-		return attack;
-	}
-
-	public void setAttack(UnitAttack attack) {
-		this.attack = attack;
 	}
 
 }

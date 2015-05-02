@@ -22,6 +22,11 @@ import com.cgk.game.util.Constants;
 
 public class Hand extends CardLibrary {
 
+	private Card cardSpot1;
+	private Card cardSpot2;
+	private Card cardSpot3;
+	private Card cardSpot4;
+	private Card cardSpot5;
 	private Card touchedCard;
 	private Rectangle handArea;
 	private static Asset<Texture> backDropAsset = new Asset<>(
@@ -36,9 +41,25 @@ public class Hand extends CardLibrary {
 	}
 
 	private void setDefaultCardPositions() {
-		for (int i = 0; i < cards.size(); i++) {
-			cards.get(i).setStartX(i * Constants.HAND_AREA_BTWN_CARDS);
-			cards.get(i).setStartY(handArea.y);
+		if (cardSpot1 != null) {
+			cardSpot1.setStartX(0 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot1.setStartY(handArea.y);
+		}
+		if (cardSpot2 != null) {
+			cardSpot2.setStartX(1 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot2.setStartY(handArea.y);
+		}
+		if (cardSpot3 != null) {
+			cardSpot3.setStartX(2 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot3.setStartY(handArea.y);
+		}
+		if (cardSpot4 != null) {
+			cardSpot4.setStartX(3 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot4.setStartY(handArea.y);
+		}
+		if (cardSpot5 != null) {
+			cardSpot5.setStartX(4 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot5.setStartY(handArea.y);
 		}
 	}
 
@@ -52,8 +73,6 @@ public class Hand extends CardLibrary {
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
-		batcher.draw(backDropAsset.getAssetFromAtlas(atlas), handArea.x,
-				handArea.y, handArea.width, handArea.height);
 		for (Card card : cards) {
 			card.draw(batcher, atlas);
 		}
@@ -87,10 +106,32 @@ public class Hand extends CardLibrary {
 
 	public void removeCard(Card card) {
 		cards.remove(card);
+		if (cardSpot1 == card) {
+			cardSpot1 = null;
+		} else if (cardSpot2 == card) {
+			cardSpot2 = null;
+		} else if (cardSpot3 == card) {
+			cardSpot3 = null;
+		} else if (cardSpot4 == card) {
+			cardSpot4 = null;
+		} else if (cardSpot5 == card) {
+			cardSpot5 = null;
+		}
 	}
 
 	public void addCard(Card card) {
 		cards.add(card);
+		if (cardSpot1 == null) {
+			cardSpot1 = card;
+		} else if (cardSpot2 == null) {
+			cardSpot2 = card;
+		} else if (cardSpot3 == null) {
+			cardSpot3 = card;
+		} else if (cardSpot4 == null) {
+			cardSpot4 = card;
+		} else if (cardSpot5 == null) {
+			cardSpot5 = card;
+		}
 		setDefaultCardPositions();
 	}
 

@@ -88,16 +88,16 @@ public class ComboElement {
 
 	public void draw(SpriteBatch batcher, AtlasRegion comboTop,
 			AtlasRegion comboBottom, int comboNumber) {
+		float x = 0 + comboNumber * Constants.COMBO_AREA_BETWEEN;
+		float y = Constants.COMBO_Y;
 		batcher.setColor(startColor.getColorTint());
-		batcher.draw(comboTop, 0 + comboNumber * Constants.COMBO_AREA_BETWEEN,
-				Constants.COMBO_Y, Constants.COMBO_WIDTH,
+		batcher.draw(comboTop, x, y, Constants.COMBO_WIDTH,
 				Constants.COMBO_HEIGHT);
 		batcher.setColor(endColor.getColorTint());
-		batcher.draw(comboBottom, 0 + comboNumber
-				* Constants.COMBO_AREA_BETWEEN,
-				Constants.COMBO_Y, Constants.COMBO_WIDTH,
+		batcher.draw(comboBottom, x, y, Constants.COMBO_WIDTH,
 				Constants.COMBO_HEIGHT);
 		batcher.setColor(Color.WHITE);
+		Constants.COMBO_BUBBLE_FONT.draw(batcher, "" + value, x
+				+ (Constants.COMBO_WIDTH / 2), y + Constants.COMBO_HEIGHT);
 	}
-
 }
