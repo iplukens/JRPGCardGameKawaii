@@ -1,5 +1,10 @@
 package com.cgk.game.gameobject.units.hero;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,24 +15,25 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
+import com.cgk.game.gameobject.units.eventresponses.UnitAttackResponse;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 public class Hero extends UnitObject {
 
 	private static Asset<Texture> heroTexture = new Asset<>("assets/hero.png",
 			Texture.class);
-	private Asset<Texture> currentGraphic;
 
-	public Hero(EventQueue eventQueue, int maxHealth, AttackType attackType) {
-		super(eventQueue);
+	public Hero(int maxHealth, AttackType attackType) {
+		super();
 		this.maxHealth = maxHealth;
 		this.attackType = attackType;
-		this.currentHealth = maxHealth;
-		unitBox = new Rectangle(Constants.HERO_STARTING_X,
-				Constants.HERO_STARTING_Y, Constants.DEFAULT_HERO_WIDTH,
-				Constants.DEFAULT_HERO_HEIGHT);
+		this.currentHealth = maxHealth / 2;
+		this.baseAttack = 10;
+		unitBox = new Rectangle(BattlefieldConstants.HERO_STARTING_X,
+				BattlefieldConstants.HERO_STARTING_Y, BattlefieldConstants.DEFAULT_HERO_WIDTH,
+				BattlefieldConstants.DEFAULT_HERO_HEIGHT);
+		currentGraphic = heroTexture;
 	}
 
 	@Override
@@ -38,15 +44,17 @@ public class Hero extends UnitObject {
 	}
 
 	@Override
-	protected void setupAssets() {
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
 		textureAssets.add(heroTexture);
-		currentGraphic = heroTexture;
+		return textureAssets;
 	}
 
 	@Override
 	protected void setupEventResponses() {
 		super.setupEventResponses();
 		addResponse(EventType.ATTACK_PLAYER, new ProcessAttackResponse());
+		addResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
 	}
 
 	@Override
@@ -57,12 +65,25 @@ public class Hero extends UnitObject {
 	@Override
 	protected void sendOnDeathEvents() {
 		sendEvent(new DefeatEvent());
+		getBattlefield().removeHero(this);
 	}
 
 	@Override
 	public void erase() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Sound>>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Music>>();
 	}
 
 }

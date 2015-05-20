@@ -22,20 +22,20 @@ public class EventQueueTest extends GameObjectTest {
 
 	@Test
 	public void registerGameObject() {
-		Enemy wesley = new Wesley(queue);
+		Enemy wesley = new Wesley();
 		Assert.assertTrue(queue.containsRegisteredObject(wesley));
 	}
 
 	@Test
 	public void chainEventTest() throws InterruptedException {
-		new DeBoOg(queue);
-		queue.put(new PlayEvent(new FuelTheFire(queue)));
+		new DeBoOg();
+		queue.put(new PlayEvent(new FuelTheFire()));
 		verify(queue, times(3)).put((GameEvent) anyObject());
 	}
 
 	@Test
 	public void maximumStackTest() throws InterruptedException {
-		Enemy deboOg = new DeBoOg(queue);
+		Enemy deboOg = new DeBoOg();
 		deboOg.setAttackType(AttackType.BLUE);
 		deboOg.setBaseAttack(50);
 		queue.put(new AttackPlayerEvent(deboOg));
@@ -46,11 +46,11 @@ public class EventQueueTest extends GameObjectTest {
 	@Test
 	public void chainStopsOnHeroDeath() throws InterruptedException {
 		int heroHealth = 50;
-		new Hero(queue, heroHealth, AttackType.BLUE);
-		DeBoOg deboog = new DeBoOg(queue);
+		new Hero(heroHealth, AttackType.BLUE);
+		DeBoOg deboog = new DeBoOg();
 		deboog.setBaseAttack(heroHealth);
 		queue.put(new AttackPlayerEvent(deboog));
-		verify(queue, times(2)).put((GameEvent) anyObject());
+		verify(queue, times(4)).put((GameEvent) anyObject());
 	}
 
 }

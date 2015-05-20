@@ -15,12 +15,8 @@ public class FuelTheFireTest extends GameObjectTest {
 
 	@Test
 	public void playTest() {
-		Card ftF = new FuelTheFire(queue);
+		Card ftF = new FuelTheFire();
 		ftF.play();
-		try {
-			verify(queue, times(2)).put((GameEvent) anyObject());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		verify(queue, times(2)).put((GameEvent) anyObject());
 	}
 }

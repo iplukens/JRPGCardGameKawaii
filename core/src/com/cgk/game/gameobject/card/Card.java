@@ -16,9 +16,8 @@ import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
+import com.cgk.game.util.BattlefieldConstants;
 import com.cgk.game.util.CardConstants;
-import com.cgk.game.util.Constants;
 
 public abstract class Card extends GameObject {
 
@@ -36,16 +35,16 @@ public abstract class Card extends GameObject {
 	protected boolean alive = true;
 	private float startX;
 	private float startY;
+	private static Asset<Texture> cardBack = new Asset<Texture>(
+			"assets/cardBack.png", Texture.class);
 	private static Asset<Texture> cardBackground = new Asset<Texture>(
 			"assets/cardBackground.png", Texture.class);
 	private static Asset<Texture> insideCardBackground = new Asset<Texture>(
 			"assets/insideCardBorder.png", Texture.class);
 
-	protected Card(EventQueue eventQueue, String cardName, String cardText,
+	protected Card(String cardName, String cardText,
 			Asset<Texture> cardGraphic) {
-		super(eventQueue);
-		textureAssets.add(cardBackground);
-		textureAssets.add(insideCardBackground);
+		super();
 		this.cardName = cardName;
 		this.cardText = cardText;
 		cardArea = new Rectangle(0, 0, CardConstants.WIDTH,
@@ -55,6 +54,14 @@ public abstract class Card extends GameObject {
 		this.currentGraphic = cardGraphic;
 		startingCardType = AttackType.GREY;
 		endingCardType = AttackType.GREY;
+	}
+
+	public static List<Asset<Texture>> getBaseTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<Asset<Texture>>();
+		textureAssets.add(cardBack);
+		textureAssets.add(cardBackground);
+		textureAssets.add(insideCardBackground);
+		return textureAssets;
 	}
 
 	/**
@@ -157,11 +164,20 @@ public abstract class Card extends GameObject {
 		drawEffectText(batcher);
 	}
 
+	public void drawBack(SpriteBatch batcher, TextureAtlas atlas) {
+		drawCardBack(batcher, atlas);
+	}
+
 	private void drawArt(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(currentGraphic.getAssetFromAtlas(atlas), cardArea.x
 				+ CardConstants.ART_MARGIN, cardArea.y + CardConstants.HEIGHT
 				- CardConstants.ART_HEIGHT - CardConstants.ART_MARGIN,
 				CardConstants.ART_WIDTH, CardConstants.ART_HEIGHT);
+	}
+
+	private void drawCardBack(SpriteBatch batcher, TextureAtlas atlas) {
+		batcher.draw(cardBack.getAssetFromAtlas(atlas), cardArea.x, cardArea.y,
+				cardArea.width, cardArea.height);
 	}
 
 	private void drawBackground(SpriteBatch batcher, TextureAtlas atlas) {
@@ -191,7 +207,7 @@ public abstract class Card extends GameObject {
 	}
 
 	private void drawResourceIndicator(SpriteBatch batcher) {
-		Constants.COMBO_BUBBLE_FONT.draw(batcher, "" + resourceNumber,
+		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, "" + resourceNumber,
 				cardArea.x + CardConstants.BORDER_SIDE, cardArea.y
 						+ CardConstants.HEIGHT - CardConstants.BORDER_SIDE);
 	}
@@ -203,16 +219,18 @@ public abstract class Card extends GameObject {
 	}
 
 	public void processRelease(Vector2 touchPos) {
-		touchPos.y = Constants.SCREEN_HEIGHT - touchPos.y;
-		if (touchPos.y > (startY + CardConstants.HEIGHT / 2)
-				+ Constants.PLAY_CARD_THRESHOLD) {
-			logInfo("Playing card");
-			play();
-		} else if (touchPos.y < (startY + CardConstants.HEIGHT / 2)
-				- Constants.PLAY_CARD_THRESHOLD
-				|| touchPos.y < Constants.DISCARD_SCREEN_FLOOR) {
-			logInfo("Discarding card");
-			discard();
+		if (touchPos != null) {
+			touchPos.y = BattlefieldConstants.SCREEN_HEIGHT - touchPos.y;
+			if (touchPos.y > (startY + CardConstants.HEIGHT / 2)
+					+ BattlefieldConstants.PLAY_CARD_THRESHOLD) {
+				logInfo("Playing card");
+				play();
+			} else if (touchPos.y < (startY + CardConstants.HEIGHT / 2)
+					- BattlefieldConstants.PLAY_CARD_THRESHOLD
+					|| touchPos.y < BattlefieldConstants.DISCARD_SCREEN_FLOOR) {
+				logInfo("Discarding card");
+				discard();
+			}
 		}
 	}
 

@@ -18,9 +18,8 @@ public class ComboTrackerTest extends GameObjectTest {
 
 	@Test
 	public void comboLengthTestMatchingColor() throws Exception {
-		ComboTracker comboTracker = new ComboTracker(queue, 0, 0,
-				AttackType.GREY);
-		Card blueGreenCard = new FuelTheFire(queue);
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card blueGreenCard = new FuelTheFire();
 		blueGreenCard.setStartingCardType(AttackType.BLUE);
 		blueGreenCard.setEndingCardType(AttackType.GREEN);
 		blueGreenCard.play();
@@ -29,7 +28,7 @@ public class ComboTrackerTest extends GameObjectTest {
 		Assert.assertEquals(blueGreenCard.getResourceNumber(),
 				comboTracker.getResourceValue());
 		Assert.assertEquals(1, comboTracker.getSize());
-		Card greenRedCard = new FuelTheFire(queue);
+		Card greenRedCard = new FuelTheFire();
 		greenRedCard.setStartingCardType(AttackType.GREEN);
 		greenRedCard.setEndingCardType(AttackType.RED);
 		greenRedCard.play();
@@ -42,15 +41,14 @@ public class ComboTrackerTest extends GameObjectTest {
 
 	@Test
 	public void comboLengthTestValue() throws Exception {
-		ComboTracker comboTracker = new ComboTracker(queue, 0, 0,
-				AttackType.GREY);
-		Card oneValueCard = new FuelTheFire(queue);
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card oneValueCard = new FuelTheFire();
 		oneValueCard.setResourceNumber(1);
 		oneValueCard.play();
 		Assert.assertEquals(oneValueCard.getResourceNumber(),
 				comboTracker.getResourceValue());
 		Assert.assertEquals(1, comboTracker.getSize());
-		Card twoValueCard = new FuelTheFire(queue);
+		Card twoValueCard = new FuelTheFire();
 		twoValueCard.setResourceNumber(2);
 		twoValueCard.play();
 		Assert.assertEquals(twoValueCard.getResourceNumber(),
@@ -60,15 +58,14 @@ public class ComboTrackerTest extends GameObjectTest {
 
 	@Test
 	public void breakComboValueTest() throws Exception {
-		ComboTracker comboTracker = new ComboTracker(queue, 0, 0,
-				AttackType.GREY);
-		Card oneValueCard = new FuelTheFire(queue);
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card oneValueCard = new FuelTheFire();
 		oneValueCard.setResourceNumber(1);
 		oneValueCard.play();
 		Assert.assertEquals(oneValueCard.getResourceNumber(),
 				comboTracker.getResourceValue());
 		Assert.assertEquals(1, comboTracker.getSize());
-		Card threeValueCard = new FuelTheFire(queue);
+		Card threeValueCard = new FuelTheFire();
 		threeValueCard.setStartingCardType(AttackType.GREEN);
 		threeValueCard.setResourceNumber(1);
 		threeValueCard.play();
@@ -79,9 +76,8 @@ public class ComboTrackerTest extends GameObjectTest {
 
 	@Test
 	public void breakColorTest() throws Exception {
-		ComboTracker comboTracker = new ComboTracker(queue, 0, 0,
-				AttackType.GREY);
-		Card blueRedCard = new FuelTheFire(queue);
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card blueRedCard = new FuelTheFire();
 		blueRedCard.setStartingCardType(AttackType.BLUE);
 		blueRedCard.setEndingCardType(AttackType.RED);
 		blueRedCard.play();
@@ -90,7 +86,7 @@ public class ComboTrackerTest extends GameObjectTest {
 		Assert.assertEquals(blueRedCard.getResourceNumber(),
 				comboTracker.getResourceValue());
 		Assert.assertEquals(1, comboTracker.getSize());
-		Card greenRedCard = new FuelTheFire(queue);
+		Card greenRedCard = new FuelTheFire();
 		greenRedCard.setStartingCardType(AttackType.GREEN);
 		greenRedCard.setEndingCardType(AttackType.RED);
 		greenRedCard.play();
@@ -103,9 +99,8 @@ public class ComboTrackerTest extends GameObjectTest {
 
 	@Test
 	public void greyDoesNotComboTest() throws Exception {
-		ComboTracker comboTracker = new ComboTracker(queue, 0, 0,
-				AttackType.GREY);
-		Card oneValueCard = new FuelTheFire(queue);
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card oneValueCard = new FuelTheFire();
 		oneValueCard.setResourceNumber(1);
 		oneValueCard.play();
 		Assert.assertEquals(oneValueCard.getResourceNumber(),
@@ -114,4 +109,5 @@ public class ComboTrackerTest extends GameObjectTest {
 		oneValueCard.play();
 		Assert.assertEquals(1, comboTracker.getSize());
 	}
+
 }

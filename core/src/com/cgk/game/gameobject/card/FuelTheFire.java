@@ -1,9 +1,13 @@
 package com.cgk.game.gameobject.card;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.cgk.game.event.cardevents.AttackAdditiveEvent;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
 
 public class FuelTheFire extends Card {
 
@@ -11,8 +15,8 @@ public class FuelTheFire extends Card {
 			"assets/FuelTheFire.png",
 			Texture.class);
 
-    public FuelTheFire(EventQueue eventQueue) {
-		super(eventQueue, "Fuel the Fire", "Fuels the fire", cardAsset);
+	public FuelTheFire() {
+		super("Fuel the Fire", "Fuels the fire", cardAsset);
         this.cardEvents.add(new AttackAdditiveEvent(50));
     }
 
@@ -27,8 +31,22 @@ public class FuelTheFire extends Card {
 	}
 
 	@Override
-	protected void setupAssets() {
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
 		textureAssets.add(cardAsset);
+		return textureAssets;
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
 	}
 
 }

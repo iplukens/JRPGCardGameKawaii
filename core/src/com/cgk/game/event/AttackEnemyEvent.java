@@ -14,4 +14,9 @@ public class AttackEnemyEvent extends AttackEvent implements GameEvent {
 		return EventType.ATTACK_ENEMY;
 	}
 
+	@Override
+	public int getPriority() {
+		return 2;
+	}
+
 }

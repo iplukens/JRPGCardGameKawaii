@@ -25,11 +25,11 @@ public class PlayerAssets {
 	 * @param queue
 	 * @return
 	 */
-	public Deck getDeck(EventQueue queue) {
+	public Deck getDeck() {
 		// TODO Auto-generated method stub
-		Deck deck = new Deck(queue);
-		deck.addCard(new FuelTheFire(queue));
-		deck.addCard(new FuelTheFire(queue));
+		Deck deck = new Deck();
+		deck.addCard(new FuelTheFire());
+		deck.addCard(new FuelTheFire());
 		paintDeck(deck);
 		return deck;
 	}
@@ -59,10 +59,10 @@ public class PlayerAssets {
 	 * 
 	 * @return
 	 */
-	public List<Hero> getHeroes(EventQueue queue) {
+	public List<Hero> getHeroes() {
 		// TODO Auto-generated method stub
 		List<Hero> heroes = new ArrayList<>();
-		heroes.add(new Hero(queue, 100, AttackType.BLUE));
+		heroes.add(new Hero(100, AttackType.BLUE));
 		return heroes;
 	}
 
@@ -76,14 +76,14 @@ public class PlayerAssets {
 		return 2;
 	}
 
-	public ComboTracker getComboTracker(EventQueue queue) {
+	public ComboTracker getComboTracker() {
 		// TODO Auto-generated method stub
-		return new ComboTracker(queue, 0, 0, AttackType.GREY);
+		return new ComboTracker(0, 0, AttackType.GREY);
 	}
 
-	public PlayerTurnTimer getTimer(EventQueue queue) {
+	public PlayerTurnTimer getTimer() {
 		// TODO Auto-generated method stub
-		return new PlayerTurnTimer(queue, 25, 10, 5);
+		return new PlayerTurnTimer(5, 10, 5);
 	}
 
 }

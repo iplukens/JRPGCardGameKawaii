@@ -1,6 +1,11 @@
 package com.cgk.game.gameobject.units.enemy;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,14 +16,13 @@ import com.cgk.game.event.cardevents.AttackMultiplierEvent;
 import com.cgk.game.gameobject.eventresponses.SendEventResponse;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
 
 public class DeBoOg extends Enemy {
 
 	Asset<Texture> deboogTexture;
 
-	public DeBoOg(EventQueue eventQueue) {
-		super(eventQueue);
+	public DeBoOg() {
+		super();
 		attackType = AttackType.BLUE;
 	}
 
@@ -44,9 +48,23 @@ public class DeBoOg extends Enemy {
 				new AttackMultiplierEvent(50)));
 	}
 
-    @Override
-    protected void setupAssets() {
+	@Override
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
 		textureAssets.add(deboogTexture);
-    }
+		return textureAssets;
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Sound>>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Music>>();
+	}
 
 }

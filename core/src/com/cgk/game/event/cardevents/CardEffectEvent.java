@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.event.BaseEvent;
 import com.cgk.game.util.CardConstants;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  * events that happen upon playing cards
@@ -28,7 +28,7 @@ public abstract class CardEffectEvent extends BaseEvent {
 
 	protected void drawLine(SpriteBatch batcher, String text, int line,
 			Rectangle cardArea) {
-		Constants.COMBO_BUBBLE_FONT.draw(batcher, text, cardArea.x
+		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, text, cardArea.x
 				+ CardConstants.RULE_MARGIN, cardArea.y
 				+ (CardConstants.HEIGHT / 2));
 	}

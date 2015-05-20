@@ -1,6 +1,8 @@
 package com.cgk.game.gameobject.units;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
@@ -15,8 +17,7 @@ import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackAdditiveEventResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackMultiplierEventResponse;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  * generic class representing the on-board units in the game
@@ -25,14 +26,15 @@ import com.cgk.game.util.Constants;
  *
  */
 public abstract class UnitObject extends GameObject {
-	protected int maxHealth = 100;
-	protected int currentHealth = 1;
+	protected float maxHealth = 100f;
+	protected float currentHealth = 1f;
 	protected int baseAttack = 0;
 	protected int tempAttackAdditive = 0;
 	protected int tempAttackMultiplicative = 1;
 	protected AttackType attackType;
 	protected Map<AttackType, Double> resistances;
 	protected Rectangle unitBox;
+	protected Asset<Texture> currentGraphic;
 	protected static Asset<Texture> healthBar = new Asset<Texture>(
 			"assets/healthBar.png", Texture.class);
 
@@ -41,10 +43,10 @@ public abstract class UnitObject extends GameObject {
 		setUpResistances();
 	}
 
-	public UnitObject(EventQueue queue) {
-		super(queue);
-		setUpResistances();
+	public static List<Asset<Texture>> getBaseTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<Asset<Texture>>();
 		textureAssets.add(healthBar);
+		return textureAssets;
 	}
 
 	protected void setUpResistances() {
@@ -60,8 +62,8 @@ public abstract class UnitObject extends GameObject {
 	public void respondToEvent(GameEvent event) {
 		super.respondToEvent(event);
 		if (isDead()) {
-			unregister();
 			sendOnDeathEvents();
+			unregister();
 		}
 	}
 
@@ -148,11 +150,11 @@ public abstract class UnitObject extends GameObject {
 		this.tempAttackMultiplicative = tempAttackMultiplicative;
 	}
 
-	public int getHealth() {
+	public float getHealth() {
 		return currentHealth;
 	}
 
-	public void setHealth(int health) {
+	public void setHealth(float health) {
 		this.currentHealth = health;
 	}
 
@@ -179,22 +181,22 @@ public abstract class UnitObject extends GameObject {
 	protected void drawHealthBar(SpriteBatch batcher, TextureAtlas atlas,
 			Rectangle unitBox) {
 		float percentHealthFull = currentHealth / maxHealth;
-		if (percentHealthFull < 0) {
+		if (percentHealthFull <= 0) {
 			batcher.setColor(Color.RED);
 			batcher.draw(healthBar.getAssetFromAtlas(atlas), unitBox.x,
-					unitBox.y, unitBox.width, unitBox.height);
-			batcher.setColor(Color.WHITE);
+					unitBox.y, unitBox.width, BattlefieldConstants.HEALTHBAR_HEIGHT);
 		} else {
 			float widthFull = unitBox.width * percentHealthFull;
 			batcher.setColor(Color.GREEN);
 			batcher.draw(healthBar.getAssetFromAtlas(atlas), unitBox.x,
-					unitBox.y, widthFull, Constants.HEALTHBAR_HEIGHT);
+					unitBox.y, widthFull, BattlefieldConstants.HEALTHBAR_HEIGHT);
 			float startXEmpty = unitBox.x + widthFull;
 			float widthEmpty = unitBox.width - widthFull;
 			batcher.setColor(Color.RED);
 			batcher.draw(healthBar.getAssetFromAtlas(atlas), startXEmpty,
-					unitBox.y, widthEmpty, Constants.HEALTHBAR_HEIGHT);
+					unitBox.y, widthEmpty, BattlefieldConstants.HEALTHBAR_HEIGHT);
 		}
+		batcher.setColor(Color.WHITE);
 	}
 
 }

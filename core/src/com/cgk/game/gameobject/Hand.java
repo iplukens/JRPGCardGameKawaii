@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -17,8 +19,7 @@ import com.cgk.game.gameobject.eventresponses.HandDiscardCardEventResponse;
 import com.cgk.game.gameobject.eventresponses.HandRandomDiscardEventResponse;
 import com.cgk.game.gameobject.eventresponses.RemoveCardFromHandResponse;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 public class Hand extends CardLibrary {
 
@@ -32,42 +33,42 @@ public class Hand extends CardLibrary {
 	private static Asset<Texture> backDropAsset = new Asset<>(
 			"assets/handArea.png", Texture.class);
 
-	public Hand(EventQueue eventQueue) {
-		super(eventQueue);
-		cards = new ArrayList<>(Constants.MAX_HAND_SIZE);
-		handArea = new Rectangle(0, 0, Constants.SCREEN_WIDTH,
-				Constants.HAND_HEIGHT);
+	public Hand() {
+		super();
+		cards = new ArrayList<>(BattlefieldConstants.MAX_HAND_SIZE);
+		handArea = new Rectangle(0, 0, BattlefieldConstants.SCREEN_WIDTH,
+				BattlefieldConstants.HAND_HEIGHT);
 		setDefaultCardPositions();
 	}
 
 	private void setDefaultCardPositions() {
 		if (cardSpot1 != null) {
-			cardSpot1.setStartX(0 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot1.setStartX(0 * BattlefieldConstants.HAND_AREA_BTWN_CARDS);
 			cardSpot1.setStartY(handArea.y);
 		}
 		if (cardSpot2 != null) {
-			cardSpot2.setStartX(1 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot2.setStartX(1 * BattlefieldConstants.HAND_AREA_BTWN_CARDS);
 			cardSpot2.setStartY(handArea.y);
 		}
 		if (cardSpot3 != null) {
-			cardSpot3.setStartX(2 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot3.setStartX(2 * BattlefieldConstants.HAND_AREA_BTWN_CARDS);
 			cardSpot3.setStartY(handArea.y);
 		}
 		if (cardSpot4 != null) {
-			cardSpot4.setStartX(3 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot4.setStartX(3 * BattlefieldConstants.HAND_AREA_BTWN_CARDS);
 			cardSpot4.setStartY(handArea.y);
 		}
 		if (cardSpot5 != null) {
-			cardSpot5.setStartX(4 * Constants.HAND_AREA_BTWN_CARDS);
+			cardSpot5.setStartX(4 * BattlefieldConstants.HAND_AREA_BTWN_CARDS);
 			cardSpot5.setStartY(handArea.y);
 		}
 	}
 
-	public Hand(EventQueue eventQueue, List<Card> cards) {
-		super(eventQueue);
+	public Hand(List<Card> cards) {
+		super();
 		this.cards.addAll(cards);
-		handArea = new Rectangle(0, 0, Constants.SCREEN_WIDTH,
-				Constants.HAND_HEIGHT);
+		handArea = new Rectangle(0, 0, BattlefieldConstants.SCREEN_WIDTH,
+				BattlefieldConstants.HAND_HEIGHT);
 		setDefaultCardPositions();
 	}
 
@@ -75,6 +76,12 @@ public class Hand extends CardLibrary {
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		for (Card card : cards) {
 			card.draw(batcher, atlas);
+		}
+	}
+
+	public void drawBacks(SpriteBatch batcher, TextureAtlas atlas) {
+		for (Card card : cards) {
+			card.drawBack(batcher, atlas);
 		}
 	}
 
@@ -155,8 +162,10 @@ public class Hand extends CardLibrary {
 	}
 
 	@Override
-	protected void setupAssets() {
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
 		textureAssets.add(backDropAsset);
+		return textureAssets;
 	}
 
 	/**
@@ -182,7 +191,7 @@ public class Hand extends CardLibrary {
 	}
 
 	private Vector2 adjustToOpenGLCoords(Vector2 touchPos) {
-		touchPos.y = Constants.SCREEN_HEIGHT - touchPos.y;
+		touchPos.y = BattlefieldConstants.SCREEN_HEIGHT - touchPos.y;
 		// logInfo("new Y:" + touchPos.y);
 		return touchPos;
 	}
@@ -217,6 +226,26 @@ public class Hand extends CardLibrary {
 		for (Card card : cards) {
 			card.moveBack();
 		}
+	}
+
+	/**
+	 * plays the 'flip' animation
+	 */
+	public void flip() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
 	}
 
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.cgk.game.opengl.BattlefieldScreen;
 import com.cgk.game.system.Battlefield;
 import com.cgk.game.system.PlayerAssets;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 public class CardGameKawaii extends Game {
 	public SpriteBatch batcher;
@@ -16,7 +16,7 @@ public class CardGameKawaii extends Game {
 		batcher = new SpriteBatch();
 		float height = Gdx.graphics.getHeight();
 		float width = Gdx.graphics.getWidth();
-		Constants.initialize(height, width);
+		BattlefieldConstants.initialize(height, width);
 		// displayLoadScreen
 		PlayerAssets assets = PlayerAssets.getAssets();
 		Battlefield battlefield = new Battlefield(assets, 1);

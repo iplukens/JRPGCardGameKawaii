@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.cgk.game.gameobject.card.Card;
-import com.cgk.game.system.EventQueue;
 
 public abstract class CardLibrary extends GameObject {
 
 	protected List<Card> cards = new ArrayList<Card>();
 
-	public CardLibrary(EventQueue eventQueue) {
-		super(eventQueue);
+	public CardLibrary() {
+		super();
 	}
 
 	public abstract void addCard(Card card);

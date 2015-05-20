@@ -7,9 +7,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,34 +14,25 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
+import com.cgk.game.event.UnregisterEvent;
 import com.cgk.game.gameobject.eventresponses.EventResponse;
 import com.cgk.game.system.Asset;
+import com.cgk.game.system.Battlefield;
 import com.cgk.game.system.EventQueue;
 
 public abstract class GameObject {
 
 	final Logger LOGGER = Logger.getLogger(GameObject.class.toString());
-	@Autowired
-	private EventQueue eventQueue;
+	private static Battlefield battlefield;
+	private static EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
-	protected List<Asset<Texture>> textureAssets = new ArrayList<>();
-	protected List<Asset<Music>> musicAssets = new ArrayList<>();
-	protected List<Asset<Sound>> soundAssets = new ArrayList<>();
-	@Autowired
-	AssetManager assetManager;
+	private boolean registered;
 
 	public GameObject() {
 		eventQueue.registerGameObject(this);
+		registered = true;
 		eventResponses = new HashMap<>();
 		setupEventResponses();
-	}
-
-	public GameObject(EventQueue eventQueue) {
-		this.eventQueue = eventQueue;
-		eventQueue.registerGameObject(this);
-		eventResponses = new HashMap<>();
-		setupEventResponses();
-		setupAssets();
 	}
 
 	protected abstract void setupEventResponses();
@@ -64,16 +52,22 @@ public abstract class GameObject {
 	}
 
 	public void sendEvent(GameEvent event) {
-		try {
-			eventQueue.put(event);
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+		if (registered) {
+			try {
+				eventQueue.put(event);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.log(Level.WARNING, "FAILURE" + e.getLocalizedMessage());
+			}
+		} else {
+			LOGGER.log(Level.INFO,
+					"Unregistered object, so not sending event to queue: "
+							+ event.getType());
 		}
 	}
 
 	public void setEventQueue(EventQueue queue) {
-		this.eventQueue = queue;
+		GameObject.eventQueue = queue;
 	}
 
 	/**
@@ -121,32 +115,36 @@ public abstract class GameObject {
 
 	public List<Asset<?>> getAllAssets() {
 		List<Asset<?>> assets = new ArrayList<>();
-		assets.addAll(textureAssets);
-		assets.addAll(musicAssets);
-		assets.addAll(soundAssets);
+		assets.addAll(getTextureAssets());
+		assets.addAll(getMusicAssets());
+		assets.addAll(getSoundAssets());
 		return assets;
 	}
 
 	/**
-	 * put all assets into their respective array lists (textureAssets,
-	 * soundAssets, or musicAssets)
+	 * return a list of all texture assets associated with the game object
+	 * 
+	 * @return
 	 */
-	protected abstract void setupAssets();
+	public abstract List<Asset<Texture>> getTextureAssets();
 
-	public List<Asset<Texture>> getTextureAssets() {
-		return textureAssets;
-	}
+	/**
+	 * return a list of all sound assets associated with the game object
+	 * 
+	 * @return
+	 */
+	public abstract List<Asset<Sound>> getSoundAssets();
 
-	public List<Asset<Sound>> getSoundAssets() {
-		return soundAssets;
-	}
-
-	public List<Asset<Music>> getMusicAssets() {
-		return musicAssets;
-	}
+	/**
+	 * return a list of all music assets associated with the game object
+	 * 
+	 * @return
+	 */
+	public abstract List<Asset<Music>> getMusicAssets();
 
 	protected void unregister() {
-		eventQueue.unregisterGameObject(this);
+		sendEvent(new UnregisterEvent(this));
+		registered = false;
 	}
 
 	public void logInfo(String info) {
@@ -154,5 +152,21 @@ public abstract class GameObject {
 				.getStackTrace();
 		String stackInfo = "" + stackTraceElements[2];
 		System.out.println(stackInfo + " INFO: " + info);
+	}
+
+	public static void setBattlefield(Battlefield setBattlefield) {
+		battlefield = setBattlefield;
+	}
+
+	public static Battlefield getBattlefield() {
+		return battlefield;
+	}
+
+	public static void setQueue(EventQueue queue) {
+		eventQueue = queue;
+	}
+
+	public static EventQueue getQueue() {
+		return eventQueue;
 	}
 }

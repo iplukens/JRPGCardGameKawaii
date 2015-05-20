@@ -1,7 +1,10 @@
 package com.cgk.game.gameobject;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,16 +14,15 @@ import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.eventresponses.AddCardResponse;
 import com.cgk.game.gameobject.eventresponses.DrawFromDeckResponse;
 import com.cgk.game.system.Asset;
-import com.cgk.game.system.EventQueue;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 public class Deck extends CardLibrary {
 
 	private static Asset<Texture> fullDeck = new Asset<>("assets/fullDeck.png",
 			Texture.class);
 
-	public Deck(EventQueue eventQueue) {
-		super(eventQueue);
+	public Deck() {
+		super();
 	}
 
 	public List<Card> getCards() {
@@ -31,8 +33,8 @@ public class Deck extends CardLibrary {
 		this.cards = cards;
 	}
 
-	public Deck(EventQueue eventQueue, List<Card> cards) {
-		super(eventQueue);
+	public Deck(List<Card> cards) {
+		super();
 		this.cards.addAll(cards);
 	}
 
@@ -58,8 +60,8 @@ public class Deck extends CardLibrary {
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(getDeckState().getAssetFromAtlas(atlas),
-				Constants.DECK_X_POSITION, Constants.DECK_Y_POSITION,
-				Constants.DECK_WIDTH, Constants.DECK_HEIGHT);
+				BattlefieldConstants.DECK_X_POSITION, BattlefieldConstants.DECK_Y_POSITION,
+				BattlefieldConstants.DECK_WIDTH, BattlefieldConstants.DECK_HEIGHT);
 	}
 
 	// Look at this getting all those states.
@@ -68,8 +70,10 @@ public class Deck extends CardLibrary {
 	}
 
 	@Override
-	protected void setupAssets() {
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
 		textureAssets.add(fullDeck);
+		return textureAssets;
 	}
 
 	@Override
@@ -83,6 +87,18 @@ public class Deck extends CardLibrary {
 	@Override
 	public void erase() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<>();
 	}
 
 }

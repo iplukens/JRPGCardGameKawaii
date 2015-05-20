@@ -3,6 +3,8 @@ package com.cgk.game.system;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -30,11 +32,11 @@ public class ComboTracker extends GameObject {
 	private static Asset<Texture> comboTop = new Asset<>(
 			"assets/topComboElement.png", Texture.class);
 	private static Asset<Texture> comboBottom = new Asset<>(
-			"assets/bottomComboElement.png", Texture.class);
+			"assets/bottomComboElement.png", Texture.class);	
 
-	public ComboTracker(EventQueue queue, int comboBaseValue,
+	public ComboTracker(int comboBaseValue,
 			int resourceValue, AttackType attackType) {
-		super(queue);
+		super();
 		this.setComboBaseValue(comboBaseValue);
 		this.resourceValue = resourceValue;
 		this.attackType = attackType;
@@ -149,18 +151,38 @@ public class ComboTracker extends GameObject {
 
 	}
 
-	@Override
-	protected void setupAssets() {
-		textureAssets.add(comboBottom);
-		textureAssets.add(comboTop);
-	}
-
 	public int getComboBaseValue() {
 		return comboBaseValue;
 	}
 
 	public void setComboBaseValue(int comboBaseValue) {
 		this.comboBaseValue = comboBaseValue;
+	}
+
+	@Override
+	public List<Asset<Texture>> getTextureAssets() {
+		List<Asset<Texture>> textureAssets = new ArrayList<>();
+		textureAssets.add(comboBottom);
+		textureAssets.add(comboTop);
+		return textureAssets;
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void reset() {
+		combos.clear();
+		resourceValue = -2;
+		attackType = AttackType.GREY;
 	}
 
 }

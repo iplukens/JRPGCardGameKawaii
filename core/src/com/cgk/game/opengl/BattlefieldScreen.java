@@ -11,12 +11,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -28,10 +25,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.card.Card;
+import com.cgk.game.gameobject.units.UnitObject;
+import com.cgk.game.opengl.inputprocessor.InBewteenTurnProcessor;
 import com.cgk.game.opengl.inputprocessor.PlayerTurnInputProcessor;
 import com.cgk.game.system.Asset;
 import com.cgk.game.system.Battlefield;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  *
@@ -45,8 +45,6 @@ public class BattlefieldScreen extends ScreenAdapter {
 	ArrayList<Rectangle> cardBounds;
 	Battlefield battlefield;
 	Music music;
-	@Autowired
-	AssetManager assetManager;
 	TextureAtlas atlas;
 	public boolean assetsLoaded = false;
 
@@ -54,15 +52,17 @@ public class BattlefieldScreen extends ScreenAdapter {
 
 	public BitmapFont font;
 	private InputProcessor playerTurnProcessor;
+	private InputProcessor inBetweenTurnProcessor;
 
 	public BattlefieldScreen(CardGameKawaii game, Battlefield battlefield) {
 		this.game = game;
-		guiCam = new OrthographicCamera(Constants.SCREEN_WIDTH,
-				Constants.SCREEN_HEIGHT);
-		guiCam.position.set(Constants.SCREEN_WIDTH / 2,
-				Constants.SCREEN_HEIGHT / 2, 0);
+		guiCam = new OrthographicCamera(BattlefieldConstants.SCREEN_WIDTH,
+				BattlefieldConstants.SCREEN_HEIGHT);
+		guiCam.position.set(BattlefieldConstants.SCREEN_WIDTH / 2,
+				BattlefieldConstants.SCREEN_HEIGHT / 2, 0);
 		this.battlefield = battlefield;
 		playerTurnProcessor = new PlayerTurnInputProcessor(battlefield);
+		inBetweenTurnProcessor = new InBewteenTurnProcessor(battlefield);
 		loadAssets();
 	}
 
@@ -78,18 +78,21 @@ public class BattlefieldScreen extends ScreenAdapter {
 		 */
 		switch (battlefield.getGameState()) {
 		case PLAYER_TURN:
-			if (Gdx.input.getInputProcessor() != playerTurnProcessor) {
-				Gdx.input.setInputProcessor(playerTurnProcessor);
-			}
+			setProcessor(playerTurnProcessor);
 			battlefield.updateTimer(timedelta);
 			break;
 		case ENEMY_TURN:
+			setProcessor(null);
+			battlefield.enemyAttackProcess();
 			break;
 		case LEVEL_ADVANCE:
 			break;
 		case VICTORY:
 			break;
 		case DEFEAT:
+			break;
+		case BETWEEN_TURNS:
+			setProcessor(inBetweenTurnProcessor);
 			break;
 		}
 
@@ -100,6 +103,17 @@ public class BattlefieldScreen extends ScreenAdapter {
 		 * card.y = touchPos.y - card.height / 2; laser.play(); }
 		 *
 		 */
+	}
+
+	/**
+	 * sets the current input processor
+	 * 
+	 * @param processor
+	 */
+	private void setProcessor(InputProcessor processor) {
+		if (Gdx.input.getInputProcessor() != processor) {
+			Gdx.input.setInputProcessor(processor);
+		}
 	}
 
 	public void draw() {
@@ -145,13 +159,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		// Get and load all sounds/graphics objects will use
 		// Classes are responsbile for their sounds, animations,bitmaps
 		ArrayList<GameObject> objectsToLoad = new ArrayList<>();
-		objectsToLoad.add(battlefield.getDeck());
-		objectsToLoad.addAll(battlefield.getEnemies());
-		objectsToLoad.addAll(battlefield.getDeck().getCards());
-		objectsToLoad.add(battlefield.getHand());
-		objectsToLoad.addAll(battlefield.getHand().getCards());
-		objectsToLoad.addAll(battlefield.getHeroes());
-		objectsToLoad.add(battlefield.getComboTracker());
+		objectsToLoad.addAll(battlefield.getObjectsToLoad());
 
 		// TODO figure out what to do here
 		// I want each object to give me its textures
@@ -160,18 +168,21 @@ public class BattlefieldScreen extends ScreenAdapter {
 		HashSet<String> loadedFiles = new HashSet<>();
 		atlas = new TextureAtlas();
 		for (GameObject object : objectsToLoad) {
-			List<Asset<Texture>> assets = object.getTextureAssets();
-			for (Asset<Texture> asset : assets) {
-				if (loadedFiles.add(asset.getFileName())) {
-					LOGGER.log(Level.INFO,
-							"Loading asset " + asset.getFileName());
-					atlas.addRegion(
-							asset.getFileName(),
-							new TextureRegion(new Texture(Gdx.files
-									.internal(asset.getFileName()))));
-				}
+			loadTextures(atlas, object.getTextureAssets(), loadedFiles);
+		}
+		loadTextures(atlas, Card.getBaseTextureAssets(), loadedFiles);
+		loadTextures(atlas, UnitObject.getBaseTextureAssets(), loadedFiles);
+		assetsLoaded = true;
+	}
+
+	private void loadTextures(TextureAtlas atlas, List<Asset<Texture>> assets,
+			HashSet<String> loadedFiles) {
+		for (Asset<Texture> asset : assets) {
+			if (loadedFiles.add(asset.getFileName())) {
+				LOGGER.log(Level.INFO, "Loading asset " + asset.getFileName());
+				atlas.addRegion(asset.getFileName(), new TextureRegion(
+						new Texture(Gdx.files.internal(asset.getFileName()))));
 			}
 		}
-		assetsLoaded = true;
 	}
 }

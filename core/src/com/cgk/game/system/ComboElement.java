@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.ComboTracker.ComboType;
-import com.cgk.game.util.Constants;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  * @author ianlukens Apr 30, 2015
@@ -88,16 +88,16 @@ public class ComboElement {
 
 	public void draw(SpriteBatch batcher, AtlasRegion comboTop,
 			AtlasRegion comboBottom, int comboNumber) {
-		float x = 0 + comboNumber * Constants.COMBO_AREA_BETWEEN;
-		float y = Constants.COMBO_Y;
+		float x = 0 + comboNumber * BattlefieldConstants.COMBO_AREA_BETWEEN;
+		float y = BattlefieldConstants.COMBO_Y;
 		batcher.setColor(startColor.getColorTint());
-		batcher.draw(comboTop, x, y, Constants.COMBO_WIDTH,
-				Constants.COMBO_HEIGHT);
+		batcher.draw(comboTop, x, y, BattlefieldConstants.COMBO_WIDTH,
+				BattlefieldConstants.COMBO_HEIGHT);
 		batcher.setColor(endColor.getColorTint());
-		batcher.draw(comboBottom, x, y, Constants.COMBO_WIDTH,
-				Constants.COMBO_HEIGHT);
+		batcher.draw(comboBottom, x, y, BattlefieldConstants.COMBO_WIDTH,
+				BattlefieldConstants.COMBO_HEIGHT);
 		batcher.setColor(Color.WHITE);
-		Constants.COMBO_BUBBLE_FONT.draw(batcher, "" + value, x
-				+ (Constants.COMBO_WIDTH / 2), y + Constants.COMBO_HEIGHT);
+		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, "" + value, x
+				+ (BattlefieldConstants.COMBO_WIDTH / 2), y + BattlefieldConstants.COMBO_HEIGHT);
 	}
 }

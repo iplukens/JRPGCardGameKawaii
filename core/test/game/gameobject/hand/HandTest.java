@@ -35,7 +35,7 @@ public class HandTest extends GameObjectTest {
 	@Test
 	public void testPlayingACardRemovesItFromHand() throws Exception {
 		Hand hand = objectFactory.getHandObject();
-		Card card = new FuelTheFire(queue);
+		Card card = new FuelTheFire();
 		hand.addCard(card);
 		objectFactory.getDeckObject();
 		queue.put(new PlayEvent(card));

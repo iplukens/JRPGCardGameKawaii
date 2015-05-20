@@ -10,6 +10,6 @@ package com.cgk.game.system;
  * @author cgmcandrews
  */
 public enum GameState {
-	PLAYER_TURN, ENEMY_TURN, LEVEL_ADVANCE, VICTORY, DEFEAT
+	PLAYER_TURN, ENEMY_TURN, LEVEL_ADVANCE, VICTORY, DEFEAT, BETWEEN_TURNS
 
 }

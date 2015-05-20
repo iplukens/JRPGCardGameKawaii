@@ -1,16 +1,19 @@
 package com.cgk.game.system;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.gameobject.Deck;
+import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.Hand;
 import com.cgk.game.gameobject.units.enemy.Enemy;
 import com.cgk.game.gameobject.units.hero.Hero;
 
 public class Battlefield {
 
+	private int currentFloor;
 	private List<Enemy> enemies;
 	private List<Hero> heroes;
 	private Deck deck;
@@ -19,8 +22,14 @@ public class Battlefield {
 	private String musicFileLocation;
 	private GameState gameState;
 	private PlayerTurnTimer timer;
+	private LevelAssets levelAssets;
 
 	// TODO: support multiple levels
+
+	public Battlefield() {
+		enemies = new ArrayList<>();
+		heroes = new ArrayList<>();
+	}
 
 	/**
 	 * 
@@ -28,15 +37,20 @@ public class Battlefield {
 	 * @param levelId
 	 */
 	public Battlefield(PlayerAssets playerAssets, int levelId) {
+		currentFloor = 1;
 		EventQueue queue = new EventQueue();
-		timer = playerAssets.getTimer(queue);
-		hand = new Hand(queue);
-		deck = playerAssets.getDeck(queue);
-		comboTracker = playerAssets.getComboTracker(queue);
-		LevelAssets levelAssets = new LevelAssets(levelId);
-		enemies = levelAssets.getEnemies(queue, 1);
-		heroes = playerAssets.getHeroes(queue);
-		gameState = GameState.PLAYER_TURN;
+		GameObject.setQueue(queue);
+		GameObject.setBattlefield(this);
+		timer = playerAssets.getTimer();
+		hand = new Hand();
+		deck = playerAssets.getDeck();
+		comboTracker = playerAssets.getComboTracker();
+		levelAssets = new LevelAssets(levelId);
+		enemies = new ArrayList<>();
+		enemies.addAll(levelAssets.getEnemies(currentFloor));
+		heroes = new ArrayList<>();
+		heroes.addAll(playerAssets.getHeroes());
+		gameState = GameState.BETWEEN_TURNS;
 		for (int i = 0; i < playerAssets.getMaxHandSize(); i++) {
 			deck.drawCard();
 		}
@@ -77,7 +91,11 @@ public class Battlefield {
 			hero.draw(batcher, atlas);
 		}
 		comboTracker.draw(batcher, atlas);
-		hand.draw(batcher, atlas);
+		if (gameState == GameState.PLAYER_TURN) {
+			hand.draw(batcher, atlas);
+		} else {
+			hand.drawBacks(batcher, atlas);
+		}
 	}
 
 	public GameState getGameState() {
@@ -94,9 +112,62 @@ public class Battlefield {
 
 	public void updateTimer(float delta) {
 		timer.update(delta);
+		if (turnOver()) {
+			gameState = GameState.ENEMY_TURN;
+			hand.resetTouches(null);
+		}
 	}
 
 	public boolean turnOver() {
 		return timer.turnOver();
+	}
+
+	public void enemyAttackProcess() {
+		gameState = GameState.BETWEEN_TURNS;
+	}
+
+	public void startPlayerTurn() {
+		comboTracker.reset();
+		timer.startTimer();
+		gameState = GameState.PLAYER_TURN;
+	}
+
+	public void addHero(Hero hero) {
+		heroes.add(hero);
+	}
+
+	public void removeHero(Hero hero) {
+		heroes.remove(hero);
+	}
+
+	public void addEnemy(Enemy enemy) {
+		enemies.add(enemy);
+	}
+
+	public void removeEnemy(Enemy enemy) {
+		enemies.remove(enemy);
+		if (enemies.isEmpty()) {
+			advanceLevel();
+		}
+	}
+
+	private void advanceLevel() {
+		if (levelAssets.hasLevel(currentFloor + 1)) {
+			enemies = levelAssets.getEnemies(++currentFloor);
+		} else {
+			gameState = GameState.VICTORY;
+		}
+	}
+
+	public List<GameObject> getObjectsToLoad() {
+		List<GameObject> objectsToLoad = new ArrayList<>();
+		objectsToLoad.add(getDeck());
+		objectsToLoad.addAll(getHeroes());
+		objectsToLoad.addAll(getEnemies());
+		objectsToLoad.addAll(getDeck().getCards());
+		objectsToLoad.add(getHand());
+		objectsToLoad.addAll(getHand().getCards());
+		objectsToLoad.add(getComboTracker());
+		return objectsToLoad;
 	}
 }

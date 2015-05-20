@@ -9,7 +9,7 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
-import com.cgk.game.system.EventQueue;
+import com.cgk.game.gameobject.units.eventresponses.UnitAttackResponse;
 
 public abstract class Enemy extends UnitObject {
 
@@ -17,10 +17,6 @@ public abstract class Enemy extends UnitObject {
 
 	public Enemy() {
 		super();
-	}
-
-	public Enemy(EventQueue eventQueue) {
-		super(eventQueue);
 		onDeathEvents = new ArrayList<>();
 	}
 
@@ -32,6 +28,7 @@ public abstract class Enemy extends UnitObject {
 		for (GameEvent event : onDeathEvents) {
 			sendEvent(event);
 		}
+		getBattlefield().removeEnemy(this);
 	}
 
 	protected void setUpOnDeathEvents() {
@@ -43,7 +40,7 @@ public abstract class Enemy extends UnitObject {
 	protected void setupEventResponses() {
 		super.setupEventResponses();
 		addResponse(EventType.ATTACK_ENEMY, new ProcessAttackResponse());
+		addResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
 	}
-
 
 }

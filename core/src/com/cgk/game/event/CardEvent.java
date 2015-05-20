@@ -1,5 +1,6 @@
 package com.cgk.game.event;
 
+import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.card.Card;
 
 public abstract class CardEvent extends BaseEvent {
@@ -16,6 +17,11 @@ public abstract class CardEvent extends BaseEvent {
 	
 	public void setCard(Card card){
 		this.card = card;
+	}
+
+	@Override
+	public GameObject getOriginObject() {
+		return card;
 	}
 
 }

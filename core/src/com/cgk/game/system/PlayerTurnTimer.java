@@ -1,9 +1,19 @@
 package com.cgk.game.system;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.cgk.game.event.EndHeroTurnEvent;
+import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.GameObject;
-import com.cgk.game.util.Constants;
+import com.cgk.game.system.eventresponses.AddTimeResponse;
+import com.cgk.game.system.eventresponses.LoseTimeResponse;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  * @author ianlukens May 1, 2015
@@ -28,9 +38,9 @@ public class PlayerTurnTimer extends GameObject {
 	 * @param baseAddedTime
 	 *            - base time in seconds added when getting combos
 	 */
-	public PlayerTurnTimer(EventQueue queue, float baseTurnTime,
+	public PlayerTurnTimer(float baseTurnTime,
 			float baseDroppedTime, float baseAddedTime) {
-		super(queue);
+		super();
 		this.setBaseTurnTime(baseTurnTime);
 		this.baseDropTime = baseDroppedTime;
 		this.baseAddTime = baseAddedTime;
@@ -43,11 +53,19 @@ public class PlayerTurnTimer extends GameObject {
 	}
 
 	public void dropTime() {
-		timeRemaining -= currentDropTime;
+		dropTime(currentDropTime);
+	}
+
+	public void dropTime(float time) {
+		timeRemaining -= time;
 	}
 
 	public void addTime() {
-		timeRemaining += currentAddTime;
+		addTime(currentAddTime);
+	}
+
+	public void addTime(float time) {
+		timeRemaining += time;
 	}
 
 	public void addToDropTime(float value) {
@@ -74,6 +92,9 @@ public class PlayerTurnTimer extends GameObject {
 	public void update(float timePassed) {
 		// logInfo("Time Remaining:" + timeRemaining);
 		timeRemaining -= timePassed;
+		if (turnOver()) {
+			sendEvent(new EndHeroTurnEvent());
+		}
 	}
 
 	public boolean turnOver() {
@@ -82,15 +103,18 @@ public class PlayerTurnTimer extends GameObject {
 
 	@Override
 	protected void setupEventResponses() {
-		// TODO Auto-generated method stub
-
+		addResponse(EventType.DROP_COMBO, new LoseTimeResponse());
+		addResponse(EventType.TYPE_COMBO, new AddTimeResponse());
+		addResponse(EventType.RESOURCE_COMBO_EVENT, new AddTimeResponse());
+		addResponse(EventType.SUPER_COMBO, new AddTimeResponse());
+		addResponse(EventType.SUPER_COMBO, new AddTimeResponse());
 	}
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		String timerString = getTimerString();
-		Constants.COMBO_BUBBLE_FONT.draw(batcher, timerString, 0,
-				Constants.SCREEN_HEIGHT);
+		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, timerString, 0,
+				BattlefieldConstants.SCREEN_HEIGHT);
 	}
 
 	public String getTimerString() {
@@ -131,14 +155,12 @@ public class PlayerTurnTimer extends GameObject {
 		return millisString;
 	}
 
-	@Override
-	public void erase() {
-		// TODO Auto-generated method stub
-
+	public float getTimeRemaining() {
+		return timeRemaining;
 	}
 
 	@Override
-	protected void setupAssets() {
+	public void erase() {
 		// TODO Auto-generated method stub
 
 	}
@@ -149,6 +171,24 @@ public class PlayerTurnTimer extends GameObject {
 
 	public void setBaseTurnTime(float baseTurnTime) {
 		this.baseTurnTime = baseTurnTime;
+	}
+
+	@Override
+	public List<Asset<Texture>> getTextureAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Texture>>();
+	}
+
+	@Override
+	public List<Asset<Sound>> getSoundAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Sound>>();
+	}
+
+	@Override
+	public List<Asset<Music>> getMusicAssets() {
+		// TODO Auto-generated method stub
+		return new ArrayList<Asset<Music>>();
 	}
 
 }
