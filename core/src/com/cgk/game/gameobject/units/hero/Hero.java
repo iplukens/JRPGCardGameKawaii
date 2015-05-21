@@ -28,7 +28,7 @@ public class Hero extends UnitObject {
 		super();
 		this.maxHealth = maxHealth;
 		this.attackType = attackType;
-		this.currentHealth = maxHealth / 2;
+		this.currentHealth = maxHealth;
 		this.baseAttack = 10;
 		unitBox = new Rectangle(BattlefieldConstants.HERO_STARTING_X,
 				BattlefieldConstants.HERO_STARTING_Y, BattlefieldConstants.DEFAULT_HERO_WIDTH,
@@ -59,7 +59,8 @@ public class Hero extends UnitObject {
 
 	@Override
 	public void sendAttackEvent() {
-		sendEvent(new AttackEnemyEvent(this));
+		sendEvent(new AttackEnemyEvent(this, getBattlefield()
+				.getCurrentTarget()));
 	}
 
 	@Override

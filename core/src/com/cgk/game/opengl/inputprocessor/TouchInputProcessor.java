@@ -1,6 +1,8 @@
 package com.cgk.game.opengl.inputprocessor;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+import com.cgk.game.util.BattlefieldConstants;
 
 /**
  * @author ianlukens
@@ -37,6 +39,11 @@ public abstract class TouchInputProcessor implements InputProcessor {
 	public boolean scrolled(int amount) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	protected Vector2 adjustToOpenGLCoords(Vector2 touchPos) {
+		return new Vector2(touchPos.x, BattlefieldConstants.SCREEN_HEIGHT
+				- touchPos.y);
 	}
 
 }

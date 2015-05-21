@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.GameObject;
@@ -197,6 +198,10 @@ public abstract class UnitObject extends GameObject {
 					unitBox.y, widthEmpty, BattlefieldConstants.HEALTHBAR_HEIGHT);
 		}
 		batcher.setColor(Color.WHITE);
+	}
+
+	public boolean touched(Vector2 touchPos) {
+		return unitBox.contains(touchPos);
 	}
 
 }

@@ -173,10 +173,7 @@ public class Hand extends CardLibrary {
 	 * 
 	 * @param touchPos
 	 */
-	public void processJustTouched(Vector2 touchPos) {
-		logInfo("processing just touched: (" + touchPos.x + ", " + touchPos.y
-				+ ")");
-		touchPos = adjustToOpenGLCoords(touchPos);
+	public boolean processJustTouched(Vector2 touchPos) {
 		if (handArea.contains(touchPos)) {
 			logInfo("touched in the hand area");
 			clearJustTouched();
@@ -184,16 +181,13 @@ public class Hand extends CardLibrary {
 				if (cards.get(i).getCardArea().contains(touchPos)) {
 					logInfo("touched card " + cards.get(i).getCardName());
 					touchedCard = cards.get(i);
-					break;
+					return true;
 				}
 			}
+			return true;
+		} else {
+			return false;
 		}
-	}
-
-	private Vector2 adjustToOpenGLCoords(Vector2 touchPos) {
-		touchPos.y = BattlefieldConstants.SCREEN_HEIGHT - touchPos.y;
-		// logInfo("new Y:" + touchPos.y);
-		return touchPos;
 	}
 
 	private void clearJustTouched() {
@@ -204,7 +198,6 @@ public class Hand extends CardLibrary {
 	}
 
 	public void processTouch(Vector2 touchPos) {
-		touchPos = adjustToOpenGLCoords(touchPos);
 		if (touchedCard != null) {
 			touchedCard.processTouch(touchPos);
 		}

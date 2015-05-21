@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.Hand;
@@ -14,6 +15,7 @@ import com.cgk.game.gameobject.units.hero.Hero;
 public class Battlefield {
 
 	private int currentFloor;
+	private Enemy currentTarget;
 	private List<Enemy> enemies;
 	private List<Hero> heroes;
 	private Deck deck;
@@ -29,6 +31,7 @@ public class Battlefield {
 	public Battlefield() {
 		enemies = new ArrayList<>();
 		heroes = new ArrayList<>();
+		levelAssets = new LevelAssets(0);
 	}
 
 	/**
@@ -96,6 +99,9 @@ public class Battlefield {
 		} else {
 			hand.drawBacks(batcher, atlas);
 		}
+		if (currentTarget != null) {
+			currentTarget.drawTarget(batcher, atlas);
+		}
 	}
 
 	public GameState getGameState() {
@@ -146,6 +152,9 @@ public class Battlefield {
 
 	public void removeEnemy(Enemy enemy) {
 		enemies.remove(enemy);
+		if (currentTarget != null && currentTarget.equals(enemy)) {
+			currentTarget = null;
+		}
 		if (enemies.isEmpty()) {
 			advanceLevel();
 		}
@@ -169,5 +178,35 @@ public class Battlefield {
 		objectsToLoad.addAll(getHand().getCards());
 		objectsToLoad.add(getComboTracker());
 		return objectsToLoad;
+	}
+
+	public Enemy getCurrentTarget() {
+		if (currentTarget != null) {
+			return currentTarget;
+		} else {
+			return enemies.get(0);
+		}
+	}
+
+	public void setCurrentTarget(Enemy currentTarget) {
+		this.currentTarget = currentTarget;
+	}
+
+	public boolean processTarget(Vector2 touchPos) {
+		for (Enemy enemy : enemies) {
+			if (enemy.touched(touchPos)) {
+				currentTarget = enemy;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Hero getEnemyTarget() {
+		// TODO: complete the enemy target selecting algorithm
+		if (heroes.isEmpty()) {
+			return null;
+		}
+		return heroes.get(0);
 	}
 }

@@ -27,6 +27,7 @@ import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.units.UnitObject;
+import com.cgk.game.gameobject.units.enemy.Enemy;
 import com.cgk.game.opengl.inputprocessor.InBewteenTurnProcessor;
 import com.cgk.game.opengl.inputprocessor.PlayerTurnInputProcessor;
 import com.cgk.game.system.Asset;
@@ -172,6 +173,7 @@ public class BattlefieldScreen extends ScreenAdapter {
 		}
 		loadTextures(atlas, Card.getBaseTextureAssets(), loadedFiles);
 		loadTextures(atlas, UnitObject.getBaseTextureAssets(), loadedFiles);
+		loadTextures(atlas, Enemy.getBaseTextureAssets(), loadedFiles);
 		assetsLoaded = true;
 	}
 

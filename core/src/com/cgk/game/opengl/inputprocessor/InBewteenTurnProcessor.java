@@ -21,6 +21,11 @@ public class InBewteenTurnProcessor extends TouchInputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		touchDownPos = new Vector2(screenX, screenY);
+		Vector2 newTouch = adjustToOpenGLCoords(touchDownPos);
+		boolean setTarget = battlefield.processTarget(newTouch);
+		if (!setTarget) {
+			battlefield.setCurrentTarget(null);
+		}
 		return true;
 	}
 

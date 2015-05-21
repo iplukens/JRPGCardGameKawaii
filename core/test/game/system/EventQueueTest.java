@@ -28,6 +28,7 @@ public class EventQueueTest extends GameObjectTest {
 
 	@Test
 	public void chainEventTest() throws InterruptedException {
+		battlefield.addHero(new Hero(800, AttackType.BLUE));
 		new DeBoOg();
 		queue.put(new PlayEvent(new FuelTheFire()));
 		verify(queue, times(3)).put((GameEvent) anyObject());
@@ -36,9 +37,12 @@ public class EventQueueTest extends GameObjectTest {
 	@Test
 	public void maximumStackTest() throws InterruptedException {
 		Enemy deboOg = new DeBoOg();
+		Hero hero = new Hero(queue.getMaxEvents() * 50,
+				AttackType.BLUE);
+		battlefield.addHero(hero);
 		deboOg.setAttackType(AttackType.BLUE);
-		deboOg.setBaseAttack(50);
-		queue.put(new AttackPlayerEvent(deboOg));
+		deboOg.setBaseAttack(1);
+		queue.put(new AttackPlayerEvent(deboOg, hero));
 		verify(queue, times(queue.getMaxEvents() + 1)).put(
 				(GameEvent) anyObject());
 	}
@@ -46,10 +50,11 @@ public class EventQueueTest extends GameObjectTest {
 	@Test
 	public void chainStopsOnHeroDeath() throws InterruptedException {
 		int heroHealth = 50;
-		new Hero(heroHealth, AttackType.BLUE);
+		Hero hero = new Hero(heroHealth, AttackType.BLUE);
+		battlefield.addHero(hero);
 		DeBoOg deboog = new DeBoOg();
 		deboog.setBaseAttack(heroHealth);
-		queue.put(new AttackPlayerEvent(deboog));
+		queue.put(new AttackPlayerEvent(deboog, hero));
 		verify(queue, times(4)).put((GameEvent) anyObject());
 	}
 

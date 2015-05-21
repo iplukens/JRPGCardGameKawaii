@@ -9,6 +9,8 @@ public class ProcessAttackResponse extends
 
 	@Override
 	protected void handleEvent(UnitObject gameObject, AttackEvent event) {
-		gameObject.processAttack(event.getAttack());
+		if (event.getTarget().equals(gameObject)) {
+			gameObject.processAttack(event.getAttack());
+		}
 	}
 }

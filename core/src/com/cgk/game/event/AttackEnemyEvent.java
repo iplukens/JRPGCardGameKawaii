@@ -1,12 +1,13 @@
 package com.cgk.game.event;
 
+import com.cgk.game.gameobject.units.enemy.Enemy;
 import com.cgk.game.gameobject.units.hero.Hero;
 
 public class AttackEnemyEvent extends AttackEvent implements GameEvent {
 
 	// TODO implement targeting
-	public AttackEnemyEvent(Hero unit) {
-		super(unit);
+	public AttackEnemyEvent(Hero unit, Enemy enemy) {
+		super(unit, enemy);
 	}
 
 	@Override

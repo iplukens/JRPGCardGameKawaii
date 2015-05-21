@@ -50,8 +50,10 @@ public class PlayerTimerTest extends GameObjectTest {
 	@Test
 	public void testHeroAndEnemyAttack() {
 		timer.startTimer();
-		new Hero(500, AttackType.BLUE);
-		new Wesley();
+		Hero hero = new Hero(500, AttackType.BLUE);
+		Wesley wesley = new Wesley();
+		battlefield.addEnemy(wesley);
+		battlefield.addHero(hero);
 		float timePassed = timer.getTimeRemaining();
 		timer.update(timePassed);
 		verify(queue, times(3)).put((GameEvent) anyObject());
@@ -62,6 +64,8 @@ public class PlayerTimerTest extends GameObjectTest {
 		timer.startTimer();
 		Hero hero = new Hero(5, AttackType.BLUE);
 		Wesley wesley = new Wesley();
+		battlefield.addHero(hero);
+		battlefield.addEnemy(wesley);
 		wesley.setBaseAttack((int) hero.getHealth());
 		hero.setBaseAttack((int) wesley.getHealth());
 		float timePassed = timer.getTimeRemaining();

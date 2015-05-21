@@ -20,9 +20,14 @@ public class PlayerTurnInputProcessor extends TouchInputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		Vector2 touchPos = new Vector2();
-		touchPos.set(screenX, screenY);
-		battlefield.getHand().processJustTouched(touchPos);
+		Vector2 touchPos = new Vector2(screenX, screenY);
+		touchPos = adjustToOpenGLCoords(touchPos);
+		boolean touchedHand = battlefield.getHand()
+				.processJustTouched(touchPos);
+		boolean setTarget = battlefield.processTarget(touchPos);
+		if (!touchedHand && !setTarget) {
+			battlefield.setCurrentTarget(null);
+		}
 		return false;
 	}
 
@@ -38,6 +43,7 @@ public class PlayerTurnInputProcessor extends TouchInputProcessor {
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		Vector2 touchPos = new Vector2();
 		touchPos.set(screenX, screenY);
+		touchPos = adjustToOpenGLCoords(touchPos);
 		battlefield.getHand().processTouch(touchPos);
 		return false;
 	}

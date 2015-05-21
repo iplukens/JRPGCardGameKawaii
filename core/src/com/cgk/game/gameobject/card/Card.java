@@ -2,6 +2,7 @@ package com.cgk.game.gameobject.card;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -277,5 +278,7 @@ public abstract class Card extends GameObject {
 		cardArea.x = startX;
 		cardArea.y = startY;
 	}
+
+	public abstract void setAttributes(Map<String, String> attributes);
 
 }
