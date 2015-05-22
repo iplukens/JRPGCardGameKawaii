@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.cgk.game.event.EndEnemyTurnEvent;
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.Hand;
@@ -129,6 +130,7 @@ public class Battlefield {
 	}
 
 	public void enemyAttackProcess() {
+		GameObject.getQueue().put(new EndEnemyTurnEvent());
 		gameState = GameState.BETWEEN_TURNS;
 	}
 
@@ -181,6 +183,11 @@ public class Battlefield {
 	}
 
 	public Enemy getCurrentTarget() {
+		if (enemies.size() == 0) {
+			System.out
+					.println("THERE ARE NO ENEMIES. WHAT ARE YOU TRYING TO ATTACK?");
+			return null;
+		}
 		if (currentTarget != null) {
 			return currentTarget;
 		} else {

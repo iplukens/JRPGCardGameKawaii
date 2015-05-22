@@ -7,20 +7,19 @@ import java.util.Map;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.cgk.game.event.cardevents.AttackAdditiveEvent;
+import com.cgk.game.event.cardevents.HealEvent;
 import com.cgk.game.system.Asset;
 
-public class FuelTheFire extends ValueCard {
+public class HealingWind extends ValueCard {
 
 	private static Asset<Texture> cardAsset = new Asset<Texture>(
-			"assets/FuelTheFire.png",
+			"assets/HealingWind.png",
 			Texture.class);
 
-	public FuelTheFire() {
-		super("Fuel the Fire", cardAsset);
-		this.resourceNumber = 1;
-		AttackAdditiveEvent attackAddEvent = new AttackAdditiveEvent(this);
-		addPlayValueEvent(attackAddEvent, ValueType.STRENGTH, 50);
+	public HealingWind() {
+		super("Healing Wind", cardAsset);
+		this.resourceNumber = 2;
+		addPlayValueEvent(new HealEvent(this), ValueType.STRENGTH, 20);
     }
 
 	@Override

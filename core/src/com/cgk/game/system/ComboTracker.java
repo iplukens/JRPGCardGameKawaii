@@ -44,7 +44,7 @@ public class ComboTracker extends GameObject {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.PLAY, new ComboTrackerPlayResponse());
+		addEventResponse(EventType.PLAY, new ComboTrackerPlayResponse());
 	}
 
 	@Override

@@ -8,24 +8,37 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.cgk.game.event.cardevents.AttackAdditiveEvent;
+import com.cgk.game.event.cardevents.RandomDiscardEvent;
 import com.cgk.game.system.Asset;
 
-public class FuelTheFire extends ValueCard {
+/**
+ * @author ianlukens
+ * May 21, 2015
+ *
+ */
+public class RecklessAbandon extends ValueCard {
 
 	private static Asset<Texture> cardAsset = new Asset<Texture>(
-			"assets/FuelTheFire.png",
-			Texture.class);
+			"assets/RecklessAbandon.png", Texture.class);
 
-	public FuelTheFire() {
-		super("Fuel the Fire", cardAsset);
-		this.resourceNumber = 1;
-		AttackAdditiveEvent attackAddEvent = new AttackAdditiveEvent(this);
-		addPlayValueEvent(attackAddEvent, ValueType.STRENGTH, 50);
-    }
+	public RecklessAbandon() {
+		super("Reckless Abandon", cardAsset);
+		this.resourceNumber = 4;
+		addPlayEvent(new RandomDiscardEvent());
+		addPlayValueEvent(new AttackAdditiveEvent(this), ValueType.STRENGTH,
+				1000);
+	}
+
+	@Override
+	public void setAttributes(Map<String, String> attributes) {
+		// TODO Auto-generated method stub
+
+	}
 
 	@Override
 	protected void setupEventResponses() {
 		super.setupEventResponses();
+
 	}
 
 	@Override
@@ -38,19 +51,13 @@ public class FuelTheFire extends ValueCard {
 	@Override
 	public List<Asset<Sound>> getSoundAssets() {
 		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		return null;
 	}
 
 	@Override
 	public List<Asset<Music>> getMusicAssets() {
 		// TODO Auto-generated method stub
-		return new ArrayList<>();
-	}
-
-	@Override
-	public void setAttributes(Map<String, String> attributes) {
-		// TODO Auto-generated method stub
-
+		return null;
 	}
 
 }

@@ -2,7 +2,6 @@ package com.cgk.game.gameobject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -15,6 +14,7 @@ import com.cgk.game.event.DiscardedCardEvent;
 import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.eventresponses.AddCardResponse;
+import com.cgk.game.gameobject.eventresponses.ChangeHandColorResponse;
 import com.cgk.game.gameobject.eventresponses.HandDiscardCardEventResponse;
 import com.cgk.game.gameobject.eventresponses.HandRandomDiscardEventResponse;
 import com.cgk.game.gameobject.eventresponses.RemoveCardFromHandResponse;
@@ -101,14 +101,12 @@ public class Hand extends CardLibrary {
 	 * discards a card at random
 	 */
 	public void discardRandomCard() {
-		Card card = getRandomCard();
-		sendEvent(new DiscardedCardEvent(card));
-	}
-
-	private Card getRandomCard() {
-		Random random = new Random();
-		int randomNumber = random.nextInt(cards.size());
-		return cards.get(randomNumber);
+		if (cards.size() > 0) {
+			Card card = getRandomCard();
+			sendEvent(new DiscardedCardEvent(card));
+		} else {
+			logInfo("No cards in hand when trying to discard!");
+		}
 	}
 
 	public void removeCard(Card card) {
@@ -148,12 +146,13 @@ public class Hand extends CardLibrary {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.RANDOM_DISCARD,
+		addEventResponse(EventType.RANDOM_DISCARD,
 				new HandRandomDiscardEventResponse());
-		addResponse(EventType.CARD_DISCARDED,
+		addEventResponse(EventType.CARD_DISCARDED,
 				new HandDiscardCardEventResponse());
-		addResponse(EventType.DRAWN_CARD, new AddCardResponse());
-		addResponse(EventType.PLAY, new RemoveCardFromHandResponse());
+		addEventResponse(EventType.DRAWN_CARD, new AddCardResponse());
+		addEventResponse(EventType.PLAY, new RemoveCardFromHandResponse());
+		addEventResponse(EventType.CHANGE_HAND_COLOR, new ChangeHandColorResponse());
 	}
 
 	@Override

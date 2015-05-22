@@ -110,4 +110,19 @@ public class ComboTrackerTest extends GameObjectTest {
 		Assert.assertEquals(1, comboTracker.getSize());
 	}
 
+	@Test
+	public void testReset() throws Exception {
+		ComboTracker comboTracker = new ComboTracker(0, 0, AttackType.GREY);
+		Card oneValueCard = new FuelTheFire();
+		oneValueCard.setResourceNumber(1);
+		oneValueCard.play();
+		Assert.assertEquals(oneValueCard.getResourceNumber(),
+				comboTracker.getResourceValue());
+		Assert.assertEquals(1, comboTracker.getSize());
+		comboTracker.reset();
+		Assert.assertNotEquals(oneValueCard.getResourceNumber(),
+				comboTracker.getResourceValue());
+		Assert.assertEquals(0, comboTracker.getSize());
+	}
+
 }

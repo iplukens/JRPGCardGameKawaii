@@ -45,8 +45,8 @@ public abstract class Enemy extends UnitObject {
 	@Override
 	protected void setupEventResponses() {
 		super.setupEventResponses();
-		addResponse(EventType.ATTACK_ENEMY, new ProcessAttackResponse());
-		addResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
+		addEventResponse(EventType.ATTACK_ENEMY, new ProcessAttackResponse());
+		addEventResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
 	}
 
 	public void drawTarget(SpriteBatch batcher, TextureAtlas atlas) {

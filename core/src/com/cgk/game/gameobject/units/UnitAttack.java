@@ -32,7 +32,7 @@ public class UnitAttack {
 	}
 
 	public enum AttackType {
-		BLUE, PURPLE, YELLOW, RED, GREEN, GREY;
+		MAGENTA, BLUE, PURPLE, YELLOW, RED, GREEN, GREY;
 
 		public Color getColorTint() {
 			Color color;
@@ -54,6 +54,9 @@ public class UnitAttack {
 				break;
 			case YELLOW:
 				color = Color.YELLOW;
+				break;
+			case MAGENTA:
+				color = Color.MAGENTA;
 				break;
 			default:
 				color = Color.WHITE;

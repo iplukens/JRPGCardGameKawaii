@@ -1,12 +1,12 @@
 package com.cgk.game.gameobject.eventresponses;
 
 import com.cgk.game.event.GameEvent;
-import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.IGameObject;
 
-public abstract class EventResponse<T extends GameObject, E extends GameEvent> {
+public abstract class EventResponse<T extends IGameObject, E extends GameEvent> {
 
 	@SuppressWarnings("unchecked")
-	public void respond(GameObject gameObject, GameEvent event) {
+	public void respond(IGameObject gameObject, GameEvent event) {
 		handleEvent((T) gameObject, (E) event);
 	}
 

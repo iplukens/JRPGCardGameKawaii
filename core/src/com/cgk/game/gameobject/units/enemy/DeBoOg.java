@@ -1,6 +1,5 @@
 package com.cgk.game.gameobject.units.enemy;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.event.cardevents.AttackAdditiveEvent;
 import com.cgk.game.event.cardevents.AttackMultiplierEvent;
 import com.cgk.game.gameobject.eventresponses.SendEventResponse;
+import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 
@@ -23,28 +23,28 @@ public class DeBoOg extends Enemy {
 
 	public DeBoOg() {
 		super();
-		attackType = AttackType.BLUE;
+		attackStats = new AttackStatsStrategy(10, AttackType.BLUE);
 	}
 
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	public void erase() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void setupEventResponses() {
 		super.setupEventResponses();
-		addResponse(EventType.PLAY, new SendEventResponse(
+		addEventResponse(EventType.PLAY, new SendEventResponse(
 				new AttackAdditiveEvent(50)));
-		addResponse(EventType.ATTACK_PLAYER, new SendEventResponse(
+		addEventResponse(EventType.ATTACK_PLAYER, new SendEventResponse(
 				new AttackPlayerEvent(this)));
-		addResponse(EventType.ADD_BUFF, new SendEventResponse(
+		addEventResponse(EventType.ADD_BUFF, new SendEventResponse(
 				new AttackMultiplierEvent(50)));
 	}
 

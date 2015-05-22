@@ -11,26 +11,27 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.cgk.game.event.DiscardedCardEvent;
+import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.PlayEvent;
 import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.eventresponses.UpdateModifiersResponse;
+import com.cgk.game.gameobject.strategy.IModifiable;
+import com.cgk.game.gameobject.strategy.Modifier;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
 import com.cgk.game.util.CardConstants;
 
-public abstract class Card extends GameObject {
+public abstract class Card extends GameObject implements IModifiable {
 
 	private String cardName;
-	private String cardText;
 	protected List<Asset<?>> cardAssets = new ArrayList<>();
 	private Asset<Texture> currentGraphic;
-	protected List<GameEvent> cardEvents = new ArrayList<>();
 	private Rectangle cardArea;
-	private int resourceNumber;
-	private AttackType startingCardType;
-	private AttackType endingCardType;
+	protected int resourceNumber;
+	protected AttackTypeStrategy attackStrategy;
 	protected List<CardEffectEvent> playEvents = new ArrayList<>();
 	protected List<GameEvent> discardEvents = new ArrayList<>();
 	protected boolean alive = true;
@@ -43,18 +44,14 @@ public abstract class Card extends GameObject {
 	private static Asset<Texture> insideCardBackground = new Asset<Texture>(
 			"assets/insideCardBorder.png", Texture.class);
 
-	protected Card(String cardName, String cardText,
-			Asset<Texture> cardGraphic) {
+	protected Card(String cardName, Asset<Texture> cardGraphic) {
 		super();
 		this.cardName = cardName;
-		this.cardText = cardText;
 		cardArea = new Rectangle(0, 0, CardConstants.WIDTH,
 				CardConstants.HEIGHT);
-		setPlayEvents();
-		setDiscardEvents();
 		this.currentGraphic = cardGraphic;
-		startingCardType = AttackType.GREY;
-		endingCardType = AttackType.GREY;
+		attackStrategy = new AttackTypeStrategy(AttackType.GREY,
+				AttackType.GREY);
 	}
 
 	public static List<Asset<Texture>> getBaseTextureAssets() {
@@ -64,18 +61,6 @@ public abstract class Card extends GameObject {
 		textureAssets.add(insideCardBackground);
 		return textureAssets;
 	}
-
-	/**
-	 * set up the events that occur when the card is discarded
-	 */
-	protected void setDiscardEvents() {
-
-	}
-
-	/**
-	 * set up the events that occur when the card is played
-	 */
-	protected abstract void setPlayEvents();
 
 	public void play() {
 		sendEvent(new PlayEvent(this));
@@ -108,13 +93,6 @@ public abstract class Card extends GameObject {
 	}
 
 	/**
-	 * @return the cardText
-	 */
-	public String getCardText() {
-		return cardText;
-	}
-
-	/**
 	 * @return the alive
 	 */
 	public boolean isAlive() {
@@ -127,14 +105,6 @@ public abstract class Card extends GameObject {
 	 */
 	public void setCardName(String cardName) {
 		this.cardName = cardName;
-	}
-
-	/**
-	 * @param cardText
-	 *            the cardText to set
-	 */
-	public void setCardText(String cardText) {
-		this.cardText = cardText;
 	}
 
 	/**
@@ -155,6 +125,12 @@ public abstract class Card extends GameObject {
 
 	public void discard() {
 		sendEvent(new DiscardedCardEvent(this));
+	}
+
+	@Override
+	protected void setupEventResponses() {
+		addEventResponse(EventType.END_ENEMY_TURN,
+				new UpdateModifiersResponse());
 	}
 
 	@Override
@@ -184,13 +160,13 @@ public abstract class Card extends GameObject {
 	private void drawBackground(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(cardBackground.getAssetFromAtlas(atlas), cardArea.x,
 				cardArea.y, cardArea.width, cardArea.height);
-		batcher.setColor(startingCardType.getColorTint());
+		batcher.setColor(attackStrategy.getStartingCardType().getColorTint());
 		batcher.draw(insideCardBackground.getAssetFromAtlas(atlas), cardArea.x
 				+ CardConstants.BORDER_SIDE, cardArea.y
 				+ CardConstants.BORDER_BOTTOM,
 				CardConstants.BACKGROUND_WIDTH / 2,
 				CardConstants.BACKGROUND_HEIGHT);
-		batcher.setColor(endingCardType.getColorTint());
+		batcher.setColor(attackStrategy.getEndingCardType().getColorTint());
 		batcher.draw(insideCardBackground.getAssetFromAtlas(atlas), cardArea.x
 				+ CardConstants.BACKGROUND_WIDTH / 2
 				+ CardConstants.BORDER_SIDE, cardArea.y
@@ -208,9 +184,9 @@ public abstract class Card extends GameObject {
 	}
 
 	private void drawResourceIndicator(SpriteBatch batcher) {
-		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, "" + resourceNumber,
-				cardArea.x + CardConstants.BORDER_SIDE, cardArea.y
-						+ CardConstants.HEIGHT - CardConstants.BORDER_SIDE);
+		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, ""
+				+ resourceNumber, cardArea.x + CardConstants.BORDER_SIDE,
+				cardArea.y + CardConstants.HEIGHT - CardConstants.BORDER_SIDE);
 	}
 
 	public void processTouch(Vector2 touchPos) {
@@ -241,19 +217,23 @@ public abstract class Card extends GameObject {
 	}
 
 	public AttackType getStartingCardType() {
-		return startingCardType;
+		return attackStrategy.getStartingCardType();
 	}
 
 	public void setStartingCardType(AttackType startingCardType) {
-		this.startingCardType = startingCardType;
+		attackStrategy.setBaseStartingCardType(startingCardType);
 	}
 
 	public AttackType getEndingCardType() {
-		return endingCardType;
+		return attackStrategy.getEndingCardType();
+	}
+
+	public AttackType getBaseEndingCardType() {
+		return attackStrategy.getBaseEndingCardType();
 	}
 
 	public void setEndingCardType(AttackType endingCardType) {
-		this.endingCardType = endingCardType;
+		attackStrategy.setBaseEndingCardType(endingCardType);
 	}
 
 	public int getResourceNumber() {
@@ -279,6 +259,35 @@ public abstract class Card extends GameObject {
 		cardArea.y = startY;
 	}
 
+	public boolean addPlayEvent(CardEffectEvent event) {
+		return playEvents.add(event);
+	}
+
+	public boolean addDiscardEvent(GameEvent event) {
+		return discardEvents.add(event);
+	}
+
+	/**
+	 * possibly used in factory to process json-like object (WIP)
+	 * 
+	 * @param attributes
+	 */
 	public abstract void setAttributes(Map<String, String> attributes);
+
+	public int getPlayEventsSize() {
+		return playEvents.size();
+	}
+
+	public int getDiscardEventsSize() {
+		return discardEvents.size();
+	}
+
+	public void updateModifiers() {
+		attackStrategy.updateTemporaryModifiers();
+	}
+
+	public void addModifier(Modifier modifier) {
+		attackStrategy.addModifier(modifier);
+	}
 
 }

@@ -7,6 +7,9 @@ import java.util.Random;
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.card.Card;
 import com.cgk.game.gameobject.card.FuelTheFire;
+import com.cgk.game.gameobject.card.HealingWind;
+import com.cgk.game.gameobject.card.RecklessAbandon;
+import com.cgk.game.gameobject.card.RoseColorGlass;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.hero.Hero;
 
@@ -30,7 +33,18 @@ public class PlayerAssets {
 		Deck deck = new Deck();
 		deck.addCard(new FuelTheFire());
 		deck.addCard(new FuelTheFire());
+		deck.addCard(new FuelTheFire());
+		deck.addCard(new HealingWind());
+		deck.addCard(new HealingWind());
+		deck.addCard(new HealingWind());
+		deck.addCard(new RecklessAbandon());
+		deck.addCard(new RecklessAbandon());
+		deck.addCard(new RecklessAbandon());
+		deck.addCard(new RoseColorGlass());
+		deck.addCard(new RoseColorGlass());
+		deck.addCard(new RoseColorGlass());
 		paintDeck(deck);
+		deck.shuffle();
 		return deck;
 	}
 
@@ -73,7 +87,7 @@ public class PlayerAssets {
 
 	public int getMaxHandSize() {
 		// TODO Auto-generated method stub
-		return 2;
+		return 5;
 	}
 
 	public ComboTracker getComboTracker() {

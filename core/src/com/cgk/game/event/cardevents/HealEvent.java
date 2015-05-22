@@ -6,27 +6,27 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.gameobject.card.ValueCard;
 import com.cgk.game.gameobject.card.ValueType;
 
-public class AttackAdditiveEvent extends ValueEvent {
+public class HealEvent extends ValueEvent {
 
-	public AttackAdditiveEvent(int value) {
+	public HealEvent(int value) {
 		super(value);
 	}
 
-	public AttackAdditiveEvent(ValueCard card) {
+	public HealEvent(ValueCard card) {
 		super(card);
 	}
 
 	public EventType getType() {
-		return EventType.ADD_BUFF;
+		return EventType.HEAL_PLAYER;
 	}
 
 	@Override
 	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
 		drawLine(
 				batcher,
-				"Attack + "
+				"Heal + "
 						+ ((ValueCard) card).getValue(getType(),
-								ValueType.STRENGTH), line, cardArea);
+								ValueType.DURATION), line, cardArea);
 		return 1;
 	}
 

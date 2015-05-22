@@ -103,11 +103,11 @@ public class PlayerTurnTimer extends GameObject {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.DROP_COMBO, new LoseTimeResponse());
-		addResponse(EventType.TYPE_COMBO, new AddTimeResponse());
-		addResponse(EventType.RESOURCE_COMBO_EVENT, new AddTimeResponse());
-		addResponse(EventType.SUPER_COMBO, new AddTimeResponse());
-		addResponse(EventType.SUPER_COMBO, new AddTimeResponse());
+		addEventResponse(EventType.DROP_COMBO, new LoseTimeResponse());
+		addEventResponse(EventType.TYPE_COMBO, new AddTimeResponse());
+		addEventResponse(EventType.RESOURCE_COMBO_EVENT, new AddTimeResponse());
+		addEventResponse(EventType.SUPER_COMBO, new AddTimeResponse());
+		addEventResponse(EventType.SUPER_COMBO, new AddTimeResponse());
 	}
 
 	@Override

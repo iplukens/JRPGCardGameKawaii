@@ -13,7 +13,7 @@ public class RandomDiscardEvent extends CardEffectEvent {
 
 	@Override
 	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
-		// TODO Auto-generated method stub
+		drawLine(batcher, "Discard a card", line, cardArea);
 		return 1;
 	}
 

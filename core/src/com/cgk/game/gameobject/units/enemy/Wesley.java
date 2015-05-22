@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
+import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
@@ -20,12 +21,12 @@ public class Wesley extends Enemy {
 
 	public Wesley() {
 		super();
-		this.baseAttack = 10;
+		this.attackStats = new AttackStatsStrategy(10, AttackType.GREEN);
 		this.maxHealth = 250;
-		this.attackType = AttackType.GREEN;
 		this.currentHealth = maxHealth;
 		unitBox = new Rectangle(BattlefieldConstants.ENEMY_STARTING_X,
-				BattlefieldConstants.ENEMY_STARTING_Y, BattlefieldConstants.DEFAULT_HERO_WIDTH,
+				BattlefieldConstants.ENEMY_STARTING_Y,
+				BattlefieldConstants.DEFAULT_HERO_WIDTH,
 				BattlefieldConstants.DEFAULT_HERO_HEIGHT);
 		currentGraphic = wesleyTexture;
 	}

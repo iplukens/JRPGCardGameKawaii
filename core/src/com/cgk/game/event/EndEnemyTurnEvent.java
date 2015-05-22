@@ -1,6 +1,6 @@
 package com.cgk.game.event;
 
-public class EndEnemyTurn extends BaseEvent implements GameEvent {
+public class EndEnemyTurnEvent extends BaseEvent implements GameEvent {
 
 	@Override
 	public EventType getType() {

@@ -1,6 +1,7 @@
 package com.cgk.game.event.cardevents;
 
 import com.cgk.game.gameobject.card.ValueCard;
+import com.cgk.game.gameobject.card.ValueType;
 
 public abstract class ValueEvent extends CardEffectEvent {
 
@@ -16,10 +17,14 @@ public abstract class ValueEvent extends CardEffectEvent {
 	}
 
 	public int getValue() {
+		return value;
+	}
+
+	public int getValue(ValueType type) {
 		if (card == null) {
 			return value;
 		}
-		return ((ValueCard) card).getValue();
+		return ((ValueCard) card).getValue(getType(), type);
 	}
 
 }

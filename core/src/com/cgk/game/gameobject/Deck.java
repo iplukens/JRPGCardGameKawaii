@@ -60,8 +60,10 @@ public class Deck extends CardLibrary {
 	@Override
 	public void draw(SpriteBatch batcher, TextureAtlas atlas) {
 		batcher.draw(getDeckState().getAssetFromAtlas(atlas),
-				BattlefieldConstants.DECK_X_POSITION, BattlefieldConstants.DECK_Y_POSITION,
-				BattlefieldConstants.DECK_WIDTH, BattlefieldConstants.DECK_HEIGHT);
+				BattlefieldConstants.DECK_X_POSITION,
+				BattlefieldConstants.DECK_Y_POSITION,
+				BattlefieldConstants.DECK_WIDTH,
+				BattlefieldConstants.DECK_HEIGHT);
 	}
 
 	// Look at this getting all those states.
@@ -78,10 +80,10 @@ public class Deck extends CardLibrary {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.CARD_DISCARDED, new AddCardResponse());
-		addResponse(EventType.CARD_DISCARDED, new DrawFromDeckResponse());
-		addResponse(EventType.PLAY, new AddCardResponse());
-		addResponse(EventType.PLAY, new DrawFromDeckResponse());
+		addEventResponse(EventType.CARD_DISCARDED, new AddCardResponse());
+		addEventResponse(EventType.CARD_DISCARDED, new DrawFromDeckResponse());
+		addEventResponse(EventType.PLAY, new AddCardResponse());
+		addEventResponse(EventType.PLAY, new DrawFromDeckResponse());
 	}
 
 	@Override
@@ -99,6 +101,19 @@ public class Deck extends CardLibrary {
 	public List<Asset<Music>> getMusicAssets() {
 		// TODO Auto-generated method stub
 		return new ArrayList<>();
+	}
+
+	/**
+	 * shuffles the cards of the deck
+	 */
+	public void shuffle() {
+		List<Card> cardPool = new ArrayList<Card>();
+		while (!cards.isEmpty()) {
+			Card card = getRandomCard();
+			cards.remove(card);
+			cardPool.add(card);
+		}
+		cards = cardPool;
 	}
 
 }

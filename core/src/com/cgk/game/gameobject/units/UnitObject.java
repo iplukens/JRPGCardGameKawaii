@@ -14,6 +14,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.GameObject;
+import com.cgk.game.gameobject.eventresponses.UpdateModifiersResponse;
+import com.cgk.game.gameobject.strategy.IModifiable;
+import com.cgk.game.gameobject.strategy.Modifier;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackAdditiveEventResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackMultiplierEventResponse;
@@ -26,13 +29,10 @@ import com.cgk.game.util.BattlefieldConstants;
  * @author ianlukens
  *
  */
-public abstract class UnitObject extends GameObject {
+public abstract class UnitObject extends GameObject implements IModifiable {
 	protected float maxHealth = 100f;
 	protected float currentHealth = 1f;
-	protected int baseAttack = 0;
-	protected int tempAttackAdditive = 0;
-	protected int tempAttackMultiplicative = 1;
-	protected AttackType attackType;
+	protected AttackStatsStrategy attackStats;
 	protected Map<AttackType, Double> resistances;
 	protected Rectangle unitBox;
 	protected Asset<Texture> currentGraphic;
@@ -103,13 +103,14 @@ public abstract class UnitObject extends GameObject {
 
 	@Override
 	protected void setupEventResponses() {
-		addResponse(EventType.ADD_BUFF, new UnitAttackAdditiveEventResponse());
-		addResponse(EventType.MULT_BUFF,
+		addEventResponse(EventType.ADD_BUFF, new UnitAttackAdditiveEventResponse());
+		addEventResponse(EventType.MULT_BUFF,
 				new UnitAttackMultiplierEventResponse());
+		addEventResponse(EventType.END_ENEMY_TURN, new UpdateModifiersResponse());
 	}
 
 	public UnitAttack getAttack() {
-		return new UnitAttack(getAttackValue(), attackType);
+		return attackStats.getAttack();
 	}
 
 	public int getAttackValue() {
@@ -128,27 +129,27 @@ public abstract class UnitObject extends GameObject {
 	 */
 
 	public int getBaseAttack() {
-		return baseAttack;
+		return attackStats.getBaseAttack();
 	}
 
 	public void setBaseAttack(int baseAttack) {
-		this.baseAttack = baseAttack;
+		attackStats.setBaseAttack(baseAttack);
 	}
 
 	public int getTempAttackAdditive() {
-		return tempAttackAdditive;
+		return attackStats.getTempAttackAdditive();
 	}
 
 	public void setTempAttackAdditive(int tempAttackAdditive) {
-		this.tempAttackAdditive = tempAttackAdditive;
+		attackStats.setTempAttackAdditive(tempAttackAdditive);
 	}
 
 	public int getTempAttackMultiplicative() {
-		return tempAttackMultiplicative;
+		return attackStats.getTempAttackMultiplicative();
 	}
 
 	public void setTempAttackMultiplicative(int tempAttackMultiplicative) {
-		this.tempAttackMultiplicative = tempAttackMultiplicative;
+		attackStats.setTempAttackMultiplicative(tempAttackMultiplicative);
 	}
 
 	public float getHealth() {
@@ -163,7 +164,7 @@ public abstract class UnitObject extends GameObject {
 	 * @return the attackType
 	 */
 	public AttackType getAttackType() {
-		return attackType;
+		return attackStats.getAttackType();
 	}
 
 	/**
@@ -171,7 +172,7 @@ public abstract class UnitObject extends GameObject {
 	 *            the attackType to set
 	 */
 	public void setAttackType(AttackType attackType) {
-		this.attackType = attackType;
+		attackStats.setAttackType(attackType);
 	}
 
 	public void processAttack(UnitAttack attack) {
@@ -185,7 +186,8 @@ public abstract class UnitObject extends GameObject {
 		if (percentHealthFull <= 0) {
 			batcher.setColor(Color.RED);
 			batcher.draw(healthBar.getAssetFromAtlas(atlas), unitBox.x,
-					unitBox.y, unitBox.width, BattlefieldConstants.HEALTHBAR_HEIGHT);
+					unitBox.y, unitBox.width,
+					BattlefieldConstants.HEALTHBAR_HEIGHT);
 		} else {
 			float widthFull = unitBox.width * percentHealthFull;
 			batcher.setColor(Color.GREEN);
@@ -195,7 +197,8 @@ public abstract class UnitObject extends GameObject {
 			float widthEmpty = unitBox.width - widthFull;
 			batcher.setColor(Color.RED);
 			batcher.draw(healthBar.getAssetFromAtlas(atlas), startXEmpty,
-					unitBox.y, widthEmpty, BattlefieldConstants.HEALTHBAR_HEIGHT);
+					unitBox.y, widthEmpty,
+					BattlefieldConstants.HEALTHBAR_HEIGHT);
 		}
 		batcher.setColor(Color.WHITE);
 	}
@@ -203,5 +206,23 @@ public abstract class UnitObject extends GameObject {
 	public boolean touched(Vector2 touchPos) {
 		return unitBox.contains(touchPos);
 	}
+
+	public void heal(int value) {
+		float newHealth = currentHealth + value;
+		if (newHealth > maxHealth) {
+			currentHealth = maxHealth;
+		} else {
+			currentHealth = newHealth;
+		}
+	}
+
+	public void updateModifiers() {
+		attackStats.updateTemporaryModifiers();
+	}
+
+	public void addModifier(Modifier modifier) {
+		attackStats.addModifier(modifier);
+	}
+
 
 }

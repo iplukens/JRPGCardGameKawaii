@@ -7,11 +7,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.event.UnregisterEvent;
@@ -20,7 +15,7 @@ import com.cgk.game.system.Asset;
 import com.cgk.game.system.Battlefield;
 import com.cgk.game.system.EventQueue;
 
-public abstract class GameObject {
+public abstract class GameObject implements IGameObject {
 
 	final Logger LOGGER = Logger.getLogger(GameObject.class.toString());
 	private static Battlefield battlefield;
@@ -36,10 +31,6 @@ public abstract class GameObject {
 	}
 
 	protected abstract void setupEventResponses();
-
-	public abstract void draw(SpriteBatch batcher, TextureAtlas atlas);
-
-	public abstract void erase();
 
 	public void respondToEvent(GameEvent event) {
 		List<EventResponse<?, ?>> responses = eventResponses.get(event
@@ -77,7 +68,7 @@ public abstract class GameObject {
 	 * @param response
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> addResponse(
+	protected Map<EventType, List<EventResponse<?, ?>>> addEventResponse(
 			EventType type, EventResponse<?, ?> response) {
 		if (!eventResponses.containsKey(type)) {
 			eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
@@ -121,26 +112,7 @@ public abstract class GameObject {
 		return assets;
 	}
 
-	/**
-	 * return a list of all texture assets associated with the game object
-	 * 
-	 * @return
-	 */
-	public abstract List<Asset<Texture>> getTextureAssets();
 
-	/**
-	 * return a list of all sound assets associated with the game object
-	 * 
-	 * @return
-	 */
-	public abstract List<Asset<Sound>> getSoundAssets();
-
-	/**
-	 * return a list of all music assets associated with the game object
-	 * 
-	 * @return
-	 */
-	public abstract List<Asset<Music>> getMusicAssets();
 
 	protected void unregister() {
 		sendEvent(new UnregisterEvent(this));

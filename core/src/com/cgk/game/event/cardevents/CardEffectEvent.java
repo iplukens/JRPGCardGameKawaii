@@ -40,7 +40,9 @@ public abstract class CardEffectEvent extends BaseEvent {
 			Rectangle cardArea) {
 		BattlefieldConstants.COMBO_BUBBLE_FONT.draw(batcher, text, cardArea.x
 				+ CardConstants.RULE_MARGIN, cardArea.y
-				+ (CardConstants.HEIGHT / 2));
+						+ (CardConstants.HEIGHT / 2)
+						- (line * BattlefieldConstants.COMBO_BUBBLE_FONT
+								.getCapHeight()));
 	}
 
 }

@@ -12,10 +12,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.event.AttackEnemyEvent;
 import com.cgk.game.event.DefeatEvent;
 import com.cgk.game.event.EventType;
+import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackResponse;
+import com.cgk.game.gameobject.units.eventresponses.UnitHealResponse;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
 
@@ -27,9 +29,8 @@ public class Hero extends UnitObject {
 	public Hero(int maxHealth, AttackType attackType) {
 		super();
 		this.maxHealth = maxHealth;
-		this.attackType = attackType;
+		attackStats = new AttackStatsStrategy(10, attackType);
 		this.currentHealth = maxHealth;
-		this.baseAttack = 10;
 		unitBox = new Rectangle(BattlefieldConstants.HERO_STARTING_X,
 				BattlefieldConstants.HERO_STARTING_Y, BattlefieldConstants.DEFAULT_HERO_WIDTH,
 				BattlefieldConstants.DEFAULT_HERO_HEIGHT);
@@ -53,8 +54,9 @@ public class Hero extends UnitObject {
 	@Override
 	protected void setupEventResponses() {
 		super.setupEventResponses();
-		addResponse(EventType.ATTACK_PLAYER, new ProcessAttackResponse());
-		addResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
+		addEventResponse(EventType.ATTACK_PLAYER, new ProcessAttackResponse());
+		addEventResponse(EventType.END_HERO_TURN, new UnitAttackResponse());
+		addEventResponse(EventType.HEAL_PLAYER, new UnitHealResponse());
 	}
 
 	@Override
@@ -85,6 +87,14 @@ public class Hero extends UnitObject {
 	public List<Asset<Music>> getMusicAssets() {
 		// TODO Auto-generated method stub
 		return new ArrayList<Asset<Music>>();
+	}
+
+	public void setCurrentHealth(float newHealth) {
+		this.currentHealth = newHealth;
+	}
+
+	public float getMaxhealth() {
+		return maxHealth;
 	}
 
 }
