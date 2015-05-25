@@ -1,13 +1,15 @@
-package com.cgk.game.gameobject.units;
+package com.cgk.game.gameobject.units.strategy;
 
+import com.cgk.game.gameobject.strategy.AttackTypeStrategyModifier;
 import com.cgk.game.gameobject.strategy.Strategy;
+import com.cgk.game.gameobject.units.UnitAttack;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 
 /**
  * @author ianlukens May 21, 2015
  *
  */
-public class AttackStatsStrategy extends Strategy {
+public class AttackStatsStrategy extends Strategy<AttackTypeStrategyModifier> {
 
 	private int baseAttack = 0;
 	private int tempAttackAdditive = 0;

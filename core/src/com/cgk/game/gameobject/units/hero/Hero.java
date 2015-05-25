@@ -12,12 +12,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.event.AttackEnemyEvent;
 import com.cgk.game.event.DefeatEvent;
 import com.cgk.game.event.EventType;
-import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.UnitObject;
 import com.cgk.game.gameobject.units.eventresponses.ProcessAttackResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitHealResponse;
+import com.cgk.game.gameobject.units.strategy.AttackStatsStrategy;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
 

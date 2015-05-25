@@ -10,6 +10,4 @@ public interface IModifiable extends IGameObject {
 
 	public void updateModifiers();
 
-	public void addModifier(Modifier modifier);
-
 }

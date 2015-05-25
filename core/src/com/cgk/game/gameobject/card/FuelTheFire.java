@@ -20,7 +20,7 @@ public class FuelTheFire extends ValueCard {
 		super("Fuel the Fire", cardAsset);
 		this.resourceNumber = 1;
 		AttackAdditiveEvent attackAddEvent = new AttackAdditiveEvent(this);
-		addPlayValueEvent(attackAddEvent, ValueType.STRENGTH, 50);
+		addPlayEventWithValue(attackAddEvent, ValueType.STRENGTH, 50);
     }
 
 	@Override

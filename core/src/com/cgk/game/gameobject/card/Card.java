@@ -17,6 +17,7 @@ import com.cgk.game.event.PlayEvent;
 import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.eventresponses.UpdateModifiersResponse;
+import com.cgk.game.gameobject.strategy.AttackTypeStrategyModifier;
 import com.cgk.game.gameobject.strategy.IModifiable;
 import com.cgk.game.gameobject.strategy.Modifier;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
@@ -287,7 +288,7 @@ public abstract class Card extends GameObject implements IModifiable {
 	}
 
 	public void addModifier(Modifier modifier) {
-		attackStrategy.addModifier(modifier);
+		attackStrategy.addModifier((AttackTypeStrategyModifier) modifier);
 	}
 
 }

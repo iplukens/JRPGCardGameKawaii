@@ -23,7 +23,7 @@ public class RoseColorGlass extends ValueCard {
 	public RoseColorGlass() {
 		super("Rose Color Glass", cardAsset);
 		this.resourceNumber = 6;
-		addPlayValueEvent(new ChangeHandColorEvent(this, AttackType.RED),
+		addPlayEventWithValue(new ChangeHandColorEvent(this, AttackType.RED),
 				ValueType.DURATION, 0);
 	}
 

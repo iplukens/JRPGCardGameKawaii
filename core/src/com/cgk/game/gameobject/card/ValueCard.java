@@ -6,7 +6,7 @@ import java.util.Map;
 import com.badlogic.gdx.graphics.Texture;
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
-import com.cgk.game.event.cardevents.ValueEvent;
+import com.cgk.game.event.cardevents.CardEffectEvent;
 import com.cgk.game.system.Asset;
 
 /**
@@ -39,19 +39,20 @@ public abstract class ValueCard extends Card {
 		return values.get(eventKey).get(valueKey);
 	}
 
-	public boolean addPlayValueEvent(ValueEvent event, ValueType valueKey,
+	public boolean addPlayEventWithValue(CardEffectEvent event, ValueType valueKey,
 			int value) {
 		addValue(event, valueKey, value);
 		return addPlayEvent(event);
 	}
 
-	public boolean addPlayValueEvent(ValueEvent event,
+	public boolean addPlayEventWithValues(CardEffectEvent event,
 			Map<ValueType, Integer> values) {
 		setValues(event, values);
 		return addPlayEvent(event);
 	}
 
-	public void setValues(ValueEvent event, Map<ValueType, Integer> valueMap) {
+	public void setValues(CardEffectEvent event,
+			Map<ValueType, Integer> valueMap) {
 		values.put(event.getType(), valueMap);
 	}
 

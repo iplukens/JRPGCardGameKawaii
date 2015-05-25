@@ -26,7 +26,7 @@ public class HealEvent extends ValueEvent {
 				batcher,
 				"Heal + "
 						+ ((ValueCard) card).getValue(getType(),
-								ValueType.DURATION), line, cardArea);
+								ValueType.STRENGTH), line, cardArea);
 		return 1;
 	}
 

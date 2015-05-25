@@ -7,20 +7,23 @@ import java.util.Map;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.cgk.game.event.cardevents.HealEvent;
+import com.cgk.game.event.EventType;
+import com.cgk.game.event.cardevents.AddResistanceEvent;
+import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.system.Asset;
 
-public class HealingWind extends ValueCard {
+public class StoneSkin extends ValueCard {
 
 	private static Asset<Texture> cardAsset = new Asset<Texture>(
-			"assets/HealingWind.png",
-			Texture.class);
+			"assets/StoneSkin.png", Texture.class);
 
-	public HealingWind() {
-		super("Healing Wind", cardAsset);
-		this.resourceNumber = 2;
-		addPlayEventWithValue(new HealEvent(this), ValueType.STRENGTH, 20);
-    }
+	public StoneSkin() {
+		super("Stone Skin", cardAsset);
+		this.resourceNumber = 3;
+		addPlayEventWithValue(new AddResistanceEvent(AttackType.GREEN, this),
+				ValueType.STRENGTH, 14);
+		addValue(EventType.ADD_RESISTANCE_MOD, ValueType.DURATION, 4);
+	}
 
 	@Override
 	protected void setupEventResponses() {

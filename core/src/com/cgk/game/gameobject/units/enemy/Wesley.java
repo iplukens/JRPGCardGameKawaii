@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
-import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
+import com.cgk.game.gameobject.units.strategy.AttackStatsStrategy;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
 

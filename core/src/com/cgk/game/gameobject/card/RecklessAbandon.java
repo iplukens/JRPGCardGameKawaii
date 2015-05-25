@@ -25,7 +25,8 @@ public class RecklessAbandon extends ValueCard {
 		super("Reckless Abandon", cardAsset);
 		this.resourceNumber = 4;
 		addPlayEvent(new RandomDiscardEvent());
-		addPlayValueEvent(new AttackAdditiveEvent(this), ValueType.STRENGTH,
+		addPlayEventWithValue(new AttackAdditiveEvent(this),
+				ValueType.STRENGTH,
 				1000);
 	}
 

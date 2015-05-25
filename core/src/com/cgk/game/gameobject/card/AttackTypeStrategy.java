@@ -8,7 +8,7 @@ import com.cgk.game.gameobject.units.UnitAttack.AttackType;
  * @author ianlukens May 21, 2015
  *
  */
-public class AttackTypeStrategy extends Strategy {
+public class AttackTypeStrategy extends Strategy<AttackTypeStrategyModifier> {
 
 	private AttackType baseStartingCardType;
 	private AttackType baseEndingCardType;
@@ -30,8 +30,7 @@ public class AttackTypeStrategy extends Strategy {
 
 	private AttackType getTemporaryStartingType() {
 		for (int i = modifiers.size() - 1; i >= 0; i--) {
-			AttackTypeStrategyModifier modifier = (AttackTypeStrategyModifier) modifiers
-					.get(i);
+			AttackTypeStrategyModifier modifier = modifiers.get(i);
 			if (modifier.modifiesStartingColor()) {
 				return modifier.getStartingColor();
 			}
@@ -49,8 +48,7 @@ public class AttackTypeStrategy extends Strategy {
 
 	private AttackType getTemporaryEndingType() {
 		for (int i = modifiers.size() - 1; i >= 0; i--) {
-			AttackTypeStrategyModifier modifier = (AttackTypeStrategyModifier) modifiers
-					.get(i);
+			AttackTypeStrategyModifier modifier = modifiers.get(i);
 			if (modifier.modifiesEndingColor()) {
 				return modifier.getEndingColor();
 			}

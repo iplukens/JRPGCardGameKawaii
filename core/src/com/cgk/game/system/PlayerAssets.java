@@ -10,6 +10,7 @@ import com.cgk.game.gameobject.card.FuelTheFire;
 import com.cgk.game.gameobject.card.HealingWind;
 import com.cgk.game.gameobject.card.RecklessAbandon;
 import com.cgk.game.gameobject.card.RoseColorGlass;
+import com.cgk.game.gameobject.card.StoneSkin;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
 import com.cgk.game.gameobject.units.hero.Hero;
 
@@ -43,6 +44,9 @@ public class PlayerAssets {
 		deck.addCard(new RoseColorGlass());
 		deck.addCard(new RoseColorGlass());
 		deck.addCard(new RoseColorGlass());
+		deck.addCard(new StoneSkin());
+		deck.addCard(new StoneSkin());
+		deck.addCard(new StoneSkin());
 		paintDeck(deck);
 		deck.shuffle();
 		return deck;

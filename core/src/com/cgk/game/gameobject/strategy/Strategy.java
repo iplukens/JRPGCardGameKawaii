@@ -7,15 +7,15 @@ import java.util.List;
  * @author ianlukens May 22, 2015
  *
  */
-public abstract class Strategy {
+public abstract class Strategy<T extends Modifier> {
 
-	protected List<Modifier> modifiers;
+	protected List<T> modifiers;
 
 	public Strategy() {
 		modifiers = new ArrayList<>();
 	}
 
-	public void addModifier(Modifier modifier) {
+	public void addModifier(T modifier) {
 		modifiers.add(modifier);
 	}
 

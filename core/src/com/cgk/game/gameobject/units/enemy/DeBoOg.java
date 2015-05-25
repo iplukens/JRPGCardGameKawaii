@@ -13,8 +13,8 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.event.cardevents.AttackAdditiveEvent;
 import com.cgk.game.event.cardevents.AttackMultiplierEvent;
 import com.cgk.game.gameobject.eventresponses.SendEventResponse;
-import com.cgk.game.gameobject.units.AttackStatsStrategy;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
+import com.cgk.game.gameobject.units.strategy.AttackStatsStrategy;
 import com.cgk.game.system.Asset;
 
 public class DeBoOg extends Enemy {

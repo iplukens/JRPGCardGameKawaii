@@ -1,9 +1,7 @@
 package com.cgk.game.gameobject.units;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,11 +13,15 @@ import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.eventresponses.UpdateModifiersResponse;
+import com.cgk.game.gameobject.strategy.AttackTypeStrategyModifier;
 import com.cgk.game.gameobject.strategy.IModifiable;
-import com.cgk.game.gameobject.strategy.Modifier;
 import com.cgk.game.gameobject.units.UnitAttack.AttackType;
+import com.cgk.game.gameobject.units.eventresponses.UnitAddResistanceResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackAdditiveEventResponse;
 import com.cgk.game.gameobject.units.eventresponses.UnitAttackMultiplierEventResponse;
+import com.cgk.game.gameobject.units.strategy.AttackStatsStrategy;
+import com.cgk.game.gameobject.units.strategy.ResistanceStrategyModifier;
+import com.cgk.game.gameobject.units.strategy.ResistancesStrategy;
 import com.cgk.game.system.Asset;
 import com.cgk.game.util.BattlefieldConstants;
 
@@ -33,7 +35,7 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 	protected float maxHealth = 100f;
 	protected float currentHealth = 1f;
 	protected AttackStatsStrategy attackStats;
-	protected Map<AttackType, Double> resistances;
+	protected ResistancesStrategy resistanceStats = new ResistancesStrategy();
 	protected Rectangle unitBox;
 	protected Asset<Texture> currentGraphic;
 	protected static Asset<Texture> healthBar = new Asset<Texture>(
@@ -41,22 +43,12 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 
 	public UnitObject() {
 		super();
-		setUpResistances();
 	}
 
 	public static List<Asset<Texture>> getBaseTextureAssets() {
 		List<Asset<Texture>> textureAssets = new ArrayList<Asset<Texture>>();
 		textureAssets.add(healthBar);
 		return textureAssets;
-	}
-
-	protected void setUpResistances() {
-		resistances = new HashMap<UnitAttack.AttackType, Double>();
-		AttackType[] resistanceTypes = AttackType.values();
-		double resistanceBaseValue = 1.0;
-		for (AttackType type : resistanceTypes) {
-			resistances.put(type, resistanceBaseValue);
-		}
 	}
 
 	@Override
@@ -74,7 +66,7 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 	 * @return
 	 */
 	public double getResistanceTo(AttackType attackType) {
-		return resistances.get(attackType);
+		return resistanceStats.get(attackType);
 	}
 
 	/**
@@ -82,18 +74,8 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 	 * @param attackType
 	 * @param newValue
 	 */
-	public void setResistanceTo(AttackType attackType, Double newValue) {
-		resistances.put(attackType, newValue);
-	}
-
-	/**
-	 * add to the current resistance value
-	 * 
-	 * @param attackType
-	 * @param addedValue
-	 */
-	public void addResistanceTo(AttackType attackType, Double addedValue) {
-		resistances.put(attackType, resistances.get(attackType) + addedValue);
+	public void setBaseResistanceTo(AttackType attackType, Double newValue) {
+		resistanceStats.setBaseResistanceTo(attackType, newValue);
 	}
 
 	/**
@@ -103,10 +85,14 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 
 	@Override
 	protected void setupEventResponses() {
-		addEventResponse(EventType.ADD_BUFF, new UnitAttackAdditiveEventResponse());
+		addEventResponse(EventType.ADD_BUFF,
+				new UnitAttackAdditiveEventResponse());
 		addEventResponse(EventType.MULT_BUFF,
 				new UnitAttackMultiplierEventResponse());
-		addEventResponse(EventType.END_ENEMY_TURN, new UpdateModifiersResponse());
+		addEventResponse(EventType.END_ENEMY_TURN,
+				new UpdateModifiersResponse());
+		addEventResponse(EventType.ADD_RESISTANCE_MOD,
+				new UnitAddResistanceResponse());
 	}
 
 	public UnitAttack getAttack() {
@@ -218,11 +204,15 @@ public abstract class UnitObject extends GameObject implements IModifiable {
 
 	public void updateModifiers() {
 		attackStats.updateTemporaryModifiers();
+		resistanceStats.updateTemporaryModifiers();
 	}
 
-	public void addModifier(Modifier modifier) {
+	public void addAttackModifier(AttackTypeStrategyModifier modifier) {
 		attackStats.addModifier(modifier);
 	}
 
+	public void addResistanceModifier(ResistanceStrategyModifier modifier) {
+		resistanceStats.addModifier(modifier);
+	}
 
 }

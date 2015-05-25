@@ -5,7 +5,6 @@ import com.cgk.game.gameobject.units.hero.Hero;
 
 public class AttackEnemyEvent extends AttackEvent implements GameEvent {
 
-	// TODO implement targeting
 	public AttackEnemyEvent(Hero unit, Enemy enemy) {
 		super(unit, enemy);
 	}
