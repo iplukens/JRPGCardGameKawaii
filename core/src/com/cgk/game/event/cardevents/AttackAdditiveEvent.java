@@ -22,12 +22,11 @@ public class AttackAdditiveEvent extends ValueEvent {
 
 	@Override
 	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
-		drawLine(
+		return drawLines(
 				batcher,
 				"Attack + "
 						+ ((ValueCard) card).getValue(getType(),
 								ValueType.STRENGTH), line, cardArea);
-		return 1;
 	}
 
 }

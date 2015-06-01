@@ -27,6 +27,8 @@ public class PlayerTurnTimer extends GameObject {
 	private float baseAddTime;
 	private float currentAddTime;
 	private float timeRemaining;
+	private int turnCounter;
+	private float totalTimePassed;
 
 	/**
 	 * 
@@ -38,18 +40,21 @@ public class PlayerTurnTimer extends GameObject {
 	 * @param baseAddedTime
 	 *            - base time in seconds added when getting combos
 	 */
-	public PlayerTurnTimer(float baseTurnTime,
-			float baseDroppedTime, float baseAddedTime) {
+	public PlayerTurnTimer(float baseTurnTime, float baseDroppedTime,
+			float baseAddedTime) {
 		super();
 		this.setBaseTurnTime(baseTurnTime);
 		this.baseDropTime = baseDroppedTime;
 		this.baseAddTime = baseAddedTime;
+		this.turnCounter = 0;
+		this.totalTimePassed = 0;
 	}
 
 	public void startTimer() {
 		timeRemaining = baseTurnTime;
 		currentDropTime = baseDropTime;
 		currentAddTime = baseAddTime;
+		turnCounter++;
 	}
 
 	public void dropTime() {
@@ -95,6 +100,7 @@ public class PlayerTurnTimer extends GameObject {
 		if (turnOver()) {
 			sendEvent(new EndHeroTurnEvent());
 		}
+		totalTimePassed += timePassed;
 	}
 
 	public boolean turnOver() {
@@ -157,6 +163,24 @@ public class PlayerTurnTimer extends GameObject {
 
 	public float getTimeRemaining() {
 		return timeRemaining;
+	}
+
+	/**
+	 * gets the total number of turns for the battle
+	 * 
+	 * @return
+	 */
+	public int getTurns() {
+		return turnCounter;
+	}
+
+	/**
+	 * returns total time passed in seconds
+	 * 
+	 * @return
+	 */
+	public float getTotalTimePassed() {
+		return totalTimePassed;
 	}
 
 	@Override

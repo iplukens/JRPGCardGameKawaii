@@ -33,10 +33,13 @@ public class ChangeHandColorEvent extends
 
 	@Override
 	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
-		drawLine(batcher, "Change hand to " + color.toString() + " for "
+		return drawLines(
+				batcher,
+				"Change hand to "
+						+ color.toString()
+						+ " for "
 				+ ((ValueCard) card).getValue(getType(), ValueType.DURATION)
 				+ " turns", line, cardArea);
-		return 1;
 	}
 
 	@Override

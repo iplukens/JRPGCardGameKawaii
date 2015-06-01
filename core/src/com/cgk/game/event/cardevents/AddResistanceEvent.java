@@ -24,7 +24,7 @@ public class AddResistanceEvent extends
 
 	@Override
 	public int drawPlayInfo(SpriteBatch batcher, int line, Rectangle cardArea) {
-		drawLine(
+		return drawLines(
 				batcher,
 				resistanceType.toString()
 						+ " resistance +"
@@ -33,7 +33,6 @@ public class AddResistanceEvent extends
 						+ " for "
 						+ ((ValueCard) card).getValue(getType(),
 								ValueType.DURATION), line, cardArea);
-		return 1;
 	}
 
 	@Override
