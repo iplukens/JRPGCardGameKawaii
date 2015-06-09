@@ -26,13 +26,20 @@ public class Hero extends UnitObject {
 	private static Asset<Texture> heroTexture = new Asset<>("assets/hero.png",
 			Texture.class);
 
+	public Hero(int maxHealth, AttackType attackType, Asset<Texture> asset) {
+		this(maxHealth, attackType);
+		Hero.heroTexture = asset;
+		currentGraphic = heroTexture;
+	}
+
 	public Hero(int maxHealth, AttackType attackType) {
 		super();
 		this.maxHealth = maxHealth;
 		attackStats = new AttackStatsStrategy(10, attackType);
 		this.currentHealth = maxHealth;
 		unitBox = new Rectangle(BattlefieldConstants.HERO_STARTING_X,
-				BattlefieldConstants.HERO_STARTING_Y, BattlefieldConstants.DEFAULT_HERO_WIDTH,
+				BattlefieldConstants.HERO_STARTING_Y,
+				BattlefieldConstants.DEFAULT_HERO_WIDTH,
 				BattlefieldConstants.DEFAULT_HERO_HEIGHT);
 		currentGraphic = heroTexture;
 	}

@@ -8,6 +8,7 @@ package com.cgk.game.system;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Asset<g> {
 	String fileName;
 	Class<g> myClass;
 	g cachedAsset;
+	TextureAtlas cachedAtlas;
 
 	public Asset(String fileName, Class<g> aClass) {
 		myClass = aClass;
@@ -38,8 +40,9 @@ public class Asset<g> {
 	@SuppressWarnings("unchecked")
 	public AtlasRegion getAssetFromAtlas(TextureAtlas atlas) {
 		if (myClass == Texture.class) {
-			if (cachedAsset == null) {
+			if (cachedAsset == null || cachedAtlas != atlas) {
 				cachedAsset = (g) atlas.findRegion(fileName);
+				cachedAtlas = atlas;
 			}
 			return (AtlasRegion) cachedAsset;
 		} else {
@@ -47,5 +50,9 @@ public class Asset<g> {
 					+ myClass.toString() + "|");
 			return null;
 		}
+	}
+
+	public TextureRegion getTextureRegion() {
+		return new TextureRegion(new Texture(getFileName()));
 	}
 }

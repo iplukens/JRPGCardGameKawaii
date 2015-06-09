@@ -13,16 +13,13 @@ import java.util.logging.Logger;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.cgk.game.CardGameKawaii;
 import com.cgk.game.gameobject.GameObject;
 import com.cgk.game.gameobject.card.Card;
@@ -38,33 +35,22 @@ import com.cgk.game.util.BattlefieldConstants;
  *
  * @author cgmcandrews
  */
-public class BattlefieldScreen extends ScreenAdapter {
+public class BattlefieldScreen extends CardGameKawaiiScreen {
 
 	final Logger LOGGER = Logger.getLogger(BattlefieldScreen.class.toString());
-	CardGameKawaii game;
-	OrthographicCamera guiCam;
-	ArrayList<Rectangle> cardBounds;
-	Battlefield battlefield;
-	Music music;
-	TextureAtlas atlas;
+	private OrthographicCamera guiCam;
+	private Battlefield battlefield;
+	private Music music;
+	private TextureAtlas atlas;
 	public boolean assetsLoaded = false;
-
-	private Sound laser;
 
 	public BitmapFont font;
 	private InputProcessor playerTurnProcessor;
 	private InputProcessor inBetweenTurnProcessor;
 
 	public BattlefieldScreen(CardGameKawaii game, Battlefield battlefield) {
-		this.game = game;
-		guiCam = new OrthographicCamera(BattlefieldConstants.SCREEN_WIDTH,
-				BattlefieldConstants.SCREEN_HEIGHT);
-		guiCam.position.set(BattlefieldConstants.SCREEN_WIDTH / 2,
-				BattlefieldConstants.SCREEN_HEIGHT / 2, 0);
+		super(game);
 		this.battlefield = battlefield;
-		playerTurnProcessor = new PlayerTurnInputProcessor(battlefield);
-		inBetweenTurnProcessor = new InBewteenTurnProcessor(battlefield);
-		loadAssets();
 	}
 
 	/**
@@ -89,8 +75,10 @@ public class BattlefieldScreen extends ScreenAdapter {
 		case LEVEL_ADVANCE:
 			break;
 		case VICTORY:
+			changeScreen(new MainMenuScreen(game));
 			break;
 		case DEFEAT:
+			changeScreen(new MainMenuScreen(game));
 			break;
 		case BETWEEN_TURNS:
 			setProcessor(inBetweenTurnProcessor);
@@ -143,7 +131,6 @@ public class BattlefieldScreen extends ScreenAdapter {
 	}
 
 	public void loadAssets() {
-
 		// TODO Determine how we managed sounds and loaded fonts and music
 		// Setup font
 		// font = new BitmapFont(Gdx.files.internal("data/font.fnt"),
@@ -183,8 +170,25 @@ public class BattlefieldScreen extends ScreenAdapter {
 			if (loadedFiles.add(asset.getFileName())) {
 				LOGGER.log(Level.INFO, "Loading asset " + asset.getFileName());
 				atlas.addRegion(asset.getFileName(), new TextureRegion(
-						new Texture(Gdx.files.internal(asset.getFileName()))));
+						new Texture(asset.getFileName())));
 			}
 		}
+	}
+
+	@Override
+	protected void disposeOfAssets() {
+		atlas.dispose();
+		music.dispose();
+	}
+
+	@Override
+	public void initialize() {
+		guiCam = new OrthographicCamera(BattlefieldConstants.SCREEN_WIDTH,
+				BattlefieldConstants.SCREEN_HEIGHT);
+		guiCam.position.set(BattlefieldConstants.SCREEN_WIDTH / 2,
+				BattlefieldConstants.SCREEN_HEIGHT / 2, 0);
+		playerTurnProcessor = new PlayerTurnInputProcessor(battlefield);
+		inBetweenTurnProcessor = new InBewteenTurnProcessor(battlefield);
+		loadAssets();
 	}
 }

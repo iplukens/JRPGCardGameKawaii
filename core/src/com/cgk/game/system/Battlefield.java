@@ -6,6 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.cgk.game.HeroCharacter;
 import com.cgk.game.event.EndEnemyTurnEvent;
 import com.cgk.game.gameobject.Deck;
 import com.cgk.game.gameobject.GameObject;
@@ -37,25 +38,26 @@ public class Battlefield {
 
 	/**
 	 * 
-	 * @param playerAssets
+	 * @param heroCharacter
 	 * @param levelId
 	 */
-	public Battlefield(PlayerAssets playerAssets, int levelId) {
+	public Battlefield(HeroCharacter heroCharacter, int levelId) {
+		musicFileLocation = "assets/song.mp3";
 		currentFloor = 1;
 		EventQueue queue = new EventQueue();
 		GameObject.setQueue(queue);
 		GameObject.setBattlefield(this);
-		timer = playerAssets.getTimer();
+		timer = heroCharacter.getTimer();
 		hand = new Hand();
-		deck = playerAssets.getDeck();
-		comboTracker = playerAssets.getComboTracker();
+		deck = heroCharacter.getDeck();
+		comboTracker = heroCharacter.getComboTracker();
 		levelAssets = new LevelAssets(levelId);
 		enemies = new ArrayList<>();
 		enemies.addAll(levelAssets.getEnemies(currentFloor));
 		heroes = new ArrayList<>();
-		heroes.addAll(playerAssets.getHeroes());
+		heroes.addAll(heroCharacter.getHeroes());
 		gameState = GameState.BETWEEN_TURNS;
-		for (int i = 0; i < playerAssets.getMaxHandSize(); i++) {
+		for (int i = 0; i < heroCharacter.getMaxHandSize(); i++) {
 			deck.drawCard();
 		}
 		timer.startTimer();
@@ -110,7 +112,10 @@ public class Battlefield {
 	}
 
 	public void setGameState(GameState gameState) {
-		this.gameState = gameState;
+		if (this.gameState != GameState.DEFEAT
+				&& this.gameState != GameState.VICTORY) {
+			this.gameState = gameState;
+		}
 	}
 
 	public Hand getHand() {
@@ -120,7 +125,7 @@ public class Battlefield {
 	public void updateTimer(float delta) {
 		timer.update(delta);
 		if (turnOver()) {
-			gameState = GameState.ENEMY_TURN;
+			setGameState(GameState.ENEMY_TURN);
 			hand.resetTouches(null);
 		}
 	}
@@ -131,13 +136,13 @@ public class Battlefield {
 
 	public void enemyAttackProcess() {
 		GameObject.getQueue().put(new EndEnemyTurnEvent());
-		gameState = GameState.BETWEEN_TURNS;
+		setGameState(GameState.BETWEEN_TURNS);
 	}
 
 	public void startPlayerTurn() {
 		comboTracker.reset();
 		timer.startTimer();
-		gameState = GameState.PLAYER_TURN;
+		setGameState(GameState.PLAYER_TURN);
 	}
 
 	public void addHero(Hero hero) {
@@ -146,6 +151,9 @@ public class Battlefield {
 
 	public void removeHero(Hero hero) {
 		heroes.remove(hero);
+		if (heroes.isEmpty()) {
+			setGameState(GameState.DEFEAT);
+		}
 	}
 
 	public void addEnemy(Enemy enemy) {
@@ -166,7 +174,7 @@ public class Battlefield {
 		if (levelAssets.hasLevel(currentFloor + 1)) {
 			enemies = levelAssets.getEnemies(++currentFloor);
 		} else {
-			gameState = GameState.VICTORY;
+			setGameState(GameState.VICTORY);
 		}
 	}
 
