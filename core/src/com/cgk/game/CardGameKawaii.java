@@ -1,30 +1,46 @@
 package com.cgk.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.cgk.game.opengl.CharacterSelectScreen;
+import com.cgk.game.util.BattlefieldConstants;
 
-public class CardGameKawaii extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+public class CardGameKawaii extends Game {
+	public SpriteBatch batcher;
+	public Player player;
+	public AssetManager manager;
+
 	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+	public void create() {
+		manager = new AssetManager();
+		if (firstTimeOpen()) {
+			player = createNewPlayerId();
+		} else {
+			player = retrievePlayer();
+		}
+		batcher = new SpriteBatch();
+		float height = Gdx.graphics.getHeight();
+		float width = Gdx.graphics.getWidth();
+		BattlefieldConstants.initialize(height, width);
+		CharacterSelectScreen screen = new CharacterSelectScreen(this);
+		screen.initialize();
+		setScreen(screen);
 	}
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-		AssetManager manager = new AssetManager();
-		manager.load("badlogic.jpg", null);
+	private Player retrievePlayer() {
+		// TODO Auto-generated method stub
+		return new Player();
+	}
+
+	private Player createNewPlayerId() {
+		// TODO Auto-generated method stub
+		return new Player();
+	}
+
+	private boolean firstTimeOpen() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

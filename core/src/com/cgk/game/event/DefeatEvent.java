@@ -8,8 +8,8 @@ public class DefeatEvent extends BaseEvent {
 	}
 
 	@Override
-	public boolean hasPriority() {
-		return true;
+	public int getPriority() {
+		return 5;
 	}
 
 }

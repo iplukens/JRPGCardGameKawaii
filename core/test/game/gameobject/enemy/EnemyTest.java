@@ -16,7 +16,7 @@ public class EnemyTest extends GameObjectTest {
 
 	@Test
 	public void enemyResponseToBuffAttackTest() {
-		Enemy wesley = new Wesley(queue);
+		Enemy wesley = new Wesley();
 		int baseAttack = wesley.getAttackValue();
 		wesley.respondToEvent(buffEvent);
 		Assert.assertEquals(baseAttack + buffEvent.getValue(),

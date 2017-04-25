@@ -1,5 +1,7 @@
 package com.cgk.game.event;
 
+import com.cgk.game.gameobject.GameObject;
+
 public abstract class BaseEvent implements GameEvent {
 
 	public GameEvent cloneEvent() {
@@ -11,7 +13,12 @@ public abstract class BaseEvent implements GameEvent {
 		return null;
 	}
 
-	public boolean hasPriority() {
-		return false;
+	public int getPriority() {
+		return 1;
+	}
+
+	@Override
+	public GameObject getOriginObject() {
+		return null;
 	}
 }

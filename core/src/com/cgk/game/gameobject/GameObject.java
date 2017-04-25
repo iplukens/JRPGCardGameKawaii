@@ -7,38 +7,30 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.cgk.game.event.EventType;
 import com.cgk.game.event.GameEvent;
+import com.cgk.game.event.UnregisterEvent;
 import com.cgk.game.gameobject.eventresponses.EventResponse;
+import com.cgk.game.system.Asset;
+import com.cgk.game.system.Battlefield;
 import com.cgk.game.system.EventQueue;
 
-public abstract class GameObject {
+public abstract class GameObject implements IGameObject {
 
 	final Logger LOGGER = Logger.getLogger(GameObject.class.toString());
-	@Autowired
-	private EventQueue eventQueue;
+	private static Battlefield battlefield;
+	private static EventQueue eventQueue;
 	private Map<EventType, List<EventResponse<?, ?>>> eventResponses;
+	private boolean registered;
 
 	public GameObject() {
 		eventQueue.registerGameObject(this);
+		registered = true;
 		eventResponses = new HashMap<>();
-		setUpEventResponses();
+		setupEventResponses();
 	}
 
-	public GameObject(EventQueue eventQueue) {
-		this.eventQueue = eventQueue;
-		eventQueue.registerGameObject(this);
-		eventResponses = new HashMap<>();
-		setUpEventResponses();
-	}
-
-	protected abstract void setUpEventResponses();
-
-	public abstract void draw();
-	
-	public abstract void erase();
+	protected abstract void setupEventResponses();
 
 	public void respondToEvent(GameEvent event) {
 		List<EventResponse<?, ?>> responses = eventResponses.get(event
@@ -51,15 +43,22 @@ public abstract class GameObject {
 	}
 
 	public void sendEvent(GameEvent event) {
-		try {
-			eventQueue.put(event);
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, e.getLocalizedMessage());
+		if (registered) {
+			try {
+				eventQueue.put(event);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.log(Level.WARNING, "FAILURE" + e.getLocalizedMessage());
+			}
+		} else {
+			LOGGER.log(Level.INFO,
+					"Unregistered object, so not sending event to queue: "
+							+ event.getType());
 		}
 	}
 
 	public void setEventQueue(EventQueue queue) {
-		this.eventQueue = queue;
+		GameObject.eventQueue = queue;
 	}
 
 	/**
@@ -69,7 +68,7 @@ public abstract class GameObject {
 	 * @param response
 	 * @return
 	 */
-	protected Map<EventType, List<EventResponse<?, ?>>> addResponse(
+	protected Map<EventType, List<EventResponse<?, ?>>> addEventResponse(
 			EventType type, EventResponse<?, ?> response) {
 		if (!eventResponses.containsKey(type)) {
 			eventResponses.put(type, new ArrayList<EventResponse<?, ?>>());
@@ -105,7 +104,41 @@ public abstract class GameObject {
 		return eventResponses;
 	}
 
+	public List<Asset<?>> getAllAssets() {
+		List<Asset<?>> assets = new ArrayList<>();
+		assets.addAll(getTextureAssets());
+		assets.addAll(getMusicAssets());
+		assets.addAll(getSoundAssets());
+		return assets;
+	}
+
+
+
 	protected void unregister() {
-		eventQueue.unregisterGameObject(this);
+		sendEvent(new UnregisterEvent(this));
+		registered = false;
+	}
+
+	public void logInfo(String info) {
+		StackTraceElement[] stackTraceElements = Thread.currentThread()
+				.getStackTrace();
+		String stackInfo = "" + stackTraceElements[2];
+		System.out.println(stackInfo + " INFO: " + info);
+	}
+
+	public static void setBattlefield(Battlefield setBattlefield) {
+		battlefield = setBattlefield;
+	}
+
+	public static Battlefield getBattlefield() {
+		return battlefield;
+	}
+
+	public static void setQueue(EventQueue queue) {
+		eventQueue = queue;
+	}
+
+	public static EventQueue getQueue() {
+		return eventQueue;
 	}
 }

@@ -10,7 +10,7 @@ public class ResourceComboIncrementEvent extends BaseEvent implements GameEvent 
 
 	@Override
 	public EventType getType() {
-		return EventType.RESOURCE_EVENT;
+		return EventType.RESOURCE_COMBO_EVENT;
 	}
 
 	public int getResourceNumber() {
